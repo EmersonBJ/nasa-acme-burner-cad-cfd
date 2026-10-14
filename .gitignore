@@ -1,0 +1,34 @@
+# Project Oficial (manter restrito localmente ate o dia do hackathon)
+Project_OFicial/
+**/Project_OFicial/
+
+# Caches e arquivos temporarios do Autodesk Inventor
+**/OldVersions/
+OldVersions/
+*.lck
+*.tmp
+*.bak
+*.idb
+*.dlog
+
+# Datasets brutos de grande porte e midias (centralizados no Google Drive)
+dataset/
+**/dataset/
+*.zip
+*.tar.gz
+*.hobj
+*.mp4
+*.avi
+*.mkv
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Sistema operacional
+Thumbs.db
+Desktop.ini
+.DS_Store

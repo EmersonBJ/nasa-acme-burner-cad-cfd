@@ -73,9 +73,17 @@ Telemetry logs provided in the NASA dataset do not explicitly report instantaneo
 
 ```
 nasa-acme-burner-cad-cfd/
-├── CAD/
-│   ├── ACME_Insert_Simplificado.ipt     # Consolidated assembly representation
-│   └── Burner/                          # Sub-assembly references and geometric bodies
+├── PSI-Documents/
+│   ├── Engineering Documents/
+│   │   ├── CADs_Nosso/
+│   │   │   ├── Montagens/               # Consolidated assembly models (IPT & STEP)
+│   │   │   └── Serie_1100_a_1109/       # Individual MFD 3D models (IPT & STEP AP214)
+│   │   └── Desenhos_Tecnicos_NASA/      # Original technical drawing archives (PDF)
+│   │       ├── ACME_drawings_burners/   # Burner series technical drawings
+│   │       ├── ACME_drawings_igniter/   # Igniter subsystem drawings
+│   │       └── ...                      # Auxiliary subsystems and instrumentation
+│   ├── Metadata/                        # Mission test matrices and experimental logs
+│   └── Reports/                         # Engineering reports, CAD summaries, and test reviews
 ├── Project_Demo/
 │   ├── Dataset_Multimodal_Final.csv     # Extracted multi-sensor experimental dataset
 │   ├── ML/
@@ -89,11 +97,6 @@ nasa-acme-burner-cad-cfd/
 │   ├── Treinamento_SVR/                 # Trained surrogate weights and telemetry splits
 │   ├── Treinamento_Visao/               # Computer vision calibration and contour outputs
 │   └── nasa_psi_pipeline.py             # Feature engineering and dataset compilation
-├── psi/
-│   └── Engineering Documents/
-│       └── ACME_drawings_burners/
-│           └── MFD_Pecas_Individuais/
-│               └── Serie_1100_a_1109/   # Individual MFD drawings, IPTs, and STEP models
 ├── .gitignore                           # Repository filtering rules
 └── README.md                            # Technical project documentation
 ```

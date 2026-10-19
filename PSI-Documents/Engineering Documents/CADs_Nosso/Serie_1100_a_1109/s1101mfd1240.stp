@@ -10,11 +10,11 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 's1101mfd1240.stp',
-/* time_stamp */ '2026-10-15T00:23:50-03:00',
+/* time_stamp */ '2026-10-18T20:45:30-03:00',
 /* author */ ('User'),
 /* organization */ (''),
-/* preprocessor_version */ 'ST-DEVELOPER v20.1',
-/* originating_system */ 'Autodesk Inventor 2026',
+/* preprocessor_version */ 'ST-DEVELOPER v20.2',
+/* originating_system */ 'Autodesk Inventor 2027',
 /* authorisation */ '');
 
 FILE_SCHEMA (('AUTOMOTIVE_DESIGN { 1 0 10303 214 3 1 1 }'));
@@ -156,8 +156,8 @@ POSITIVE_RATIO_MEASURE(8.),#130);
 #133=PROPERTY_DEFINITION_REPRESENTATION(#138,#135);
 #134=REPRESENTATION('material name',(#136),#223);
 #135=REPRESENTATION('density',(#131),#223);
-#136=DESCRIPTIVE_REPRESENTATION_ITEM('A\X\E7o inoxid\X\E1vel',
-'A\X\E7o inoxid\X\E1vel');
+#136=DESCRIPTIVE_REPRESENTATION_ITEM('Stainless Steel',
+'Stainless Steel');
 #137=PROPERTY_DEFINITION('material property','material name',#232);
 #138=PROPERTY_DEFINITION('material property','density of part',#232);
 #139=AXIS2_PLACEMENT_3D('',#188,#152,#153);

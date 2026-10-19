@@ -10,11 +10,11 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 's1101mfd1248.stp',
-/* time_stamp */ '2026-10-16T00:10:03-03:00',
+/* time_stamp */ '2026-10-18T20:45:32-03:00',
 /* author */ ('G.FEDEVICH / Emerson B. J.'),
 /* organization */ (''),
-/* preprocessor_version */ 'ST-DEVELOPER v20.1',
-/* originating_system */ 'Autodesk Inventor 2026',
+/* preprocessor_version */ 'ST-DEVELOPER v20.2',
+/* originating_system */ 'Autodesk Inventor 2027',
 /* authorisation */ '');
 
 FILE_SCHEMA (('AUTOMOTIVE_DESIGN { 1 0 10303 214 3 1 1 }'));
@@ -1001,8 +1001,7 @@ POSITIVE_RATIO_MEASURE(2.7),#862);
 #865=PROPERTY_DEFINITION_REPRESENTATION(#870,#867);
 #866=REPRESENTATION('material name',(#868),#1968);
 #867=REPRESENTATION('density',(#863),#1968);
-#868=DESCRIPTIVE_REPRESENTATION_ITEM('Alum\X\EDnio 6061',
-'Alum\X\EDnio 6061');
+#868=DESCRIPTIVE_REPRESENTATION_ITEM('Aluminum 6061','Aluminum 6061');
 #869=PROPERTY_DEFINITION('material property','material name',#1977);
 #870=PROPERTY_DEFINITION('material property','density of part',#1977);
 #871=AXIS2_PLACEMENT_3D('',#1223,#974,#975);

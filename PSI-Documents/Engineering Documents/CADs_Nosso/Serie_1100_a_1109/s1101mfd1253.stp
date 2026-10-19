@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 's1101mfd1253.stp',
-/* time_stamp */ '2026-10-18T15:35:57-03:00',
+/* time_stamp */ '2026-10-18T20:45:33-03:00',
 /* author */ ('User'),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -115,12 +115,13 @@ SI_UNIT(.KILO.,.GRAM.)
 #93=MASS_MEASURE_WITH_UNIT(MASS_MEASURE(0.001),#92);
 #94=DERIVED_UNIT((#89,#90));
 #95=MEASURE_REPRESENTATION_ITEM('density measure',
-POSITIVE_RATIO_MEASURE(1.),#94);
+POSITIVE_RATIO_MEASURE(3.9),#94);
 #96=PROPERTY_DEFINITION_REPRESENTATION(#101,#98);
 #97=PROPERTY_DEFINITION_REPRESENTATION(#102,#99);
 #98=REPRESENTATION('material name',(#100),#171);
 #99=REPRESENTATION('density',(#95),#171);
-#100=DESCRIPTIVE_REPRESENTATION_ITEM('Generic','Generic');
+#100=DESCRIPTIVE_REPRESENTATION_ITEM('Alumina Ceramic (Al2O3)',
+'Alumina Ceramic (Al2O3)');
 #101=PROPERTY_DEFINITION('material property','material name',#185);
 #102=PROPERTY_DEFINITION('material property','density of part',#185);
 #103=DATE_TIME_ROLE('creation_date');

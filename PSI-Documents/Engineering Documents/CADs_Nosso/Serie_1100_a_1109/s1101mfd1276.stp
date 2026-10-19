@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 's1101mfd1276.stp',
-/* time_stamp */ '2026-10-18T17:48:00-03:00',
+/* time_stamp */ '2026-10-18T20:45:39-03:00',
 /* author */ ('User'),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -97,7 +97,8 @@ POSITIVE_RATIO_MEASURE(8.),#71);
 #74=PROPERTY_DEFINITION_REPRESENTATION(#79,#76);
 #75=REPRESENTATION('material name',(#77),#132);
 #76=REPRESENTATION('density',(#72),#132);
-#77=DESCRIPTIVE_REPRESENTATION_ITEM('Stainless Steel','Stainless Steel');
+#77=DESCRIPTIVE_REPRESENTATION_ITEM('Stainless Steel 316 (Wire Cloth)',
+'Stainless Steel 316 (Wire Cloth)');
 #78=PROPERTY_DEFINITION('material property','material name',#146);
 #79=PROPERTY_DEFINITION('material property','density of part',#146);
 #80=DATE_TIME_ROLE('creation_date');
@@ -219,6 +220,6 @@ SOLID_ANGLE_UNIT()
 #158=SURFACE_STYLE_FILL_AREA(#159);
 #159=FILL_AREA_STYLE('',(#160));
 #160=FILL_AREA_STYLE_COLOUR('',#161);
-#161=COLOUR_RGB('',0.745098039215686,0.737254901960784,0.729411764705882);
+#161=COLOUR_RGB('',0.749019607843137,0.749019607843137,0.749019607843137);
 ENDSEC;
 END-ISO-10303-21;

@@ -1,0 +1,136 @@
+ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION(('1/4 INCH SPHERICAL BURNER TUBE ASSEMBLY - NASA GRC / ZIN TECHNOLOGIES','DWG NO S1101MFA1218 REV A','ITEM 1: S1101MFD1219 (1/4 SPHERICAL BURNER TUBE) + ITEM C1: 316L SS POROUS SPHERE'),'2;1');
+FILE_NAME('S1101MFA1218_A.step','2026-11-08T17:02:32',('Engineering CAD Generator'),('NASA Glenn Research Center / ZIN Technologies'),'STEP AP214 Generator','Direct B-Rep Kernel','APPROVED: J. MCCUSKER / DESIGNER: G. FEDERICH');
+FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));
+ENDSEC;
+DATA;
+/* ========================================================================== */
+/* APPLICATION CONTEXT & PRODUCT DEFINITION (S1101MFA1218 REV A)              */
+/* ========================================================================== */
+#1 = APPLICATION_CONTEXT('core data for automotive mechanical design processes');
+#2 = APPLICATION_PROTOCOL_DEFINITION('international standard','automotive_design',2000,#1);
+#3 = PRODUCT_CONTEXT('',#1,'mechanical');
+#4 = PRODUCT('S1101MFA1218','1/4" SPHERICAL BURNER TUBE ASSEMBLY','NASA GRC DWG S1101MFA1218 REV A (PROJECT SPACE110)',(#3));
+#5 = PRODUCT_DEFINITION_FORMATION_WITH_SPECIFIED_SOURCE('REV_A','INITIAL RELEASE 10/17/2013 - ECO-547',#4,.MADE.);
+#6 = PRODUCT_DEFINITION_CONTEXT('part definition',#1,'design');
+#7 = PRODUCT_DEFINITION('S1101MFA1218_DEF','1/4" SPHERICAL BURNER TUBE ASSEMBLY',#5,#6);
+#8 = PRODUCT_DEFINITION_SHAPE('','Shape for S1101MFA1218 Rev A',#7);
+#9 = PRODUCT_RELATED_PRODUCT_CATEGORY('detail',$,(#4));
+
+/* ========================================================================== */
+/* UNITS AND GEOMETRIC REPRESENTATION CONTEXT (SI MILLIMETERS & INCH REF)     */
+/* ========================================================================== */
+#10 = ( LENGTH_UNIT() NAMED_UNIT(*) SI_UNIT(.MILLI.,.METRE.) );
+#11 = ( NAMED_UNIT(*) PLANE_ANGLE_UNIT() SI_UNIT($,.RADIAN.) );
+#12 = ( NAMED_UNIT(*) SI_UNIT($,.STERADIAN.) SOLID_ANGLE_UNIT() );
+#13 = UNCERTAINTY_MEASURE_WITH_UNIT(LENGTH_MEASURE(1.0E-04),#10,'distance_accuracy_value','confusion accuracy');
+#14 = ( GEOMETRIC_REPRESENTATION_CONTEXT(3) GLOBAL_UNCERTAINTY_ASSIGNED_CONTEXT((#13)) GLOBAL_UNIT_ASSIGNED_CONTEXT((#10,#11,#12)) REPRESENTATION_CONTEXT('Context3D','3D Context with millimeter units (Converted from ASME Y14.5M-1994 Inch Drawing)') );
+
+/* ========================================================================== */
+/* COORDINATE SYSTEMS & DIRECTIONS                                            */
+/* ========================================================================== */
+#20 = CARTESIAN_POINT('Origin',(0.0,0.0,0.0));
+#21 = DIRECTION('Z_Axis',(0.0,0.0,1.0));
+#22 = DIRECTION('X_Axis',(1.0,0.0,0.0));
+#23 = DIRECTION('Neg_Z_Axis',(0.0,0.0,-1.0));
+#24 = AXIS2_PLACEMENT_3D('World_CS',#20,#21,#22);
+
+/* ========================================================================== */
+/* SOLID 1: ITEM 1 - S1101MFD1219 (BURNER TUBE Ø0.059" x 6.1885" TO SPHERE)   */
+/* ========================================================================== */
+#30 = CARTESIAN_POINT('Tube_Bottom_Center',(0.0,0.0,0.0));
+#31 = CARTESIAN_POINT('Tube_Top_Center',(0.0,0.0,157.188684));
+#32 = CARTESIAN_POINT('Tube_Bottom_Seam',(0.7493,0.0,0.0));
+#33 = CARTESIAN_POINT('Tube_Top_Seam',(0.7493,0.0,157.188684));
+
+#34 = VERTEX_POINT('V_Tube_Bot',#32);
+#35 = VERTEX_POINT('V_Tube_Top',#33);
+
+#36 = AXIS2_PLACEMENT_3D('Axis_Tube_Bot',#30,#21,#22);
+#37 = AXIS2_PLACEMENT_3D('Axis_Tube_Top',#31,#21,#22);
+#38 = AXIS2_PLACEMENT_3D('Axis_Tube_Cyl',#30,#21,#22);
+#39 = AXIS2_PLACEMENT_3D('Axis_Tube_Bot_Plane',#30,#23,#22);
+
+#40 = CIRCLE('Circle_Tube_Bot',#36,0.7493);
+#41 = CIRCLE('Circle_Tube_Top',#37,0.7493);
+#42 = LINE('Line_Tube_Seam',#32,#43);
+#43 = VECTOR('Vec_Tube_Z',#21,1.0);
+
+#44 = EDGE_CURVE('Edge_Tube_Bot',#34,#34,#40,.T.);
+#45 = EDGE_CURVE('Edge_Tube_Top',#35,#35,#41,.T.);
+#46 = EDGE_CURVE('Edge_Tube_Seam',#34,#35,#42,.T.);
+
+#47 = CYLINDRICAL_SURFACE('Surf_Tube_Cyl',#38,0.7493);
+#48 = PLANE('Surf_Tube_Bot_Cap',#39);
+#49 = PLANE('Surf_Tube_Top_Cap',#37);
+
+/* Face 1: Tube Outer Cylindrical Surface */
+#50 = ORIENTED_EDGE('',*,*,#44,.F.);
+#51 = ORIENTED_EDGE('',*,*,#46,.T.);
+#52 = ORIENTED_EDGE('',*,*,#45,.T.);
+#53 = ORIENTED_EDGE('',*,*,#46,.F.);
+#54 = EDGE_LOOP('Loop_Tube_Cyl',(#50,#51,#52,#53));
+#55 = FACE_OUTER_BOUND('Bound_Tube_Cyl',#54,.T.);
+#56 = ADVANCED_FACE('Face_Tube_Cylindrical',(#55),#47,.T.);
+
+/* Face 2: Tube Bottom Planar Cap (Z = 0.000") */
+#57 = ORIENTED_EDGE('',*,*,#44,.T.);
+#58 = EDGE_LOOP('Loop_Tube_Bot',(#57));
+#59 = FACE_OUTER_BOUND('Bound_Tube_Bot',#58,.T.);
+#60 = ADVANCED_FACE('Face_Tube_Bottom_Cap',(#59),#48,.T.);
+
+/* ========================================================================== */
+/* SOLID 2: ITEM C1 - 316L SS POROUS SPHERICAL BURNER (Ø0.250" AT Z=6.310")   */
+/* ========================================================================== */
+#70 = CARTESIAN_POINT('Sphere_Center',(0.0,0.0,160.274));
+#71 = CARTESIAN_POINT('Sphere_North_Pole',(0.0,0.0,163.449));
+#72 = VERTEX_POINT('V_Sphere_North',#71);
+
+#73 = AXIS2_PLACEMENT_3D('Axis_Sphere',#70,#21,#22);
+#74 = DIRECTION('Y_Axis',(0.0,1.0,0.0));
+#75 = DIRECTION('Neg_Y_Axis',(0.0,-1.0,0.0));
+#76 = AXIS2_PLACEMENT_3D('Axis_Sphere_Meridian',#70,#75,#22);
+
+#77 = SPHERICAL_SURFACE('Surf_Porous_Sphere_C1',#73,3.175);
+#78 = CIRCLE('Circle_Sphere_Meridian',#76,3.175);
+#79 = EDGE_CURVE('Edge_Sphere_Meridian',#35,#72,#78,.T.);
+
+/* Face 3: Spherical Burner Surface (Trimmed at Tube Collar Z = 6.1885") */
+#80 = ORIENTED_EDGE('',*,*,#45,.F.);
+#81 = ORIENTED_EDGE('',*,*,#79,.T.);
+#82 = ORIENTED_EDGE('',*,*,#79,.F.);
+#83 = EDGE_LOOP('Loop_Sphere_Surface',(#80,#81,#82));
+#84 = FACE_OUTER_BOUND('Bound_Sphere_Surface',#83,.T.);
+#85 = ADVANCED_FACE('Face_Porous_Sphere_C1',(#84),#77,.T.);
+
+/* ========================================================================== */
+/* CLOSED SHELL & MANIFOLD SOLID BREP (UNIFIED BURNER TUBE ASSEMBLY)          */
+/* ========================================================================== */
+#90 = CLOSED_SHELL('Shell_S1101MFA1218',(#56,#60,#85));
+#91 = MANIFOLD_SOLID_BREP('S1101MFA1218_1_4_Spherical_Burner_Tube_Assembly',#90);
+#92 = ADVANCED_BREP_SHAPE_REPRESENTATION('S1101MFA1218_Rep',(#91,#24),#14);
+#93 = SHAPE_DEFINITION_REPRESENTATION(#8,#92);
+
+/* ========================================================================== */
+/* VISUAL STYLING & SURFACE COLORS (316L STAINLESS STEEL)                     */
+/* ========================================================================== */
+#100 = MECHANICAL_DESIGN_GEOMETRIC_PRESENTATION_REPRESENTATION('',(#101,#102),#14);
+#101 = STYLED_ITEM('Style_Tube_S1101MFD1219',(#103),#56);
+#102 = STYLED_ITEM('Style_Sphere_C1_316L_SS',(#107),#85);
+#103 = PRESENTATION_STYLE_ASSIGNMENT((#104));
+#104 = SURFACE_STYLE_USAGE(.BOTH.,#105);
+#105 = SURFACE_SIDE_STYLE('',(#106));
+#106 = SURFACE_STYLE_FILL_AREA(#110);
+#107 = PRESENTATION_STYLE_ASSIGNMENT((#108));
+#108 = SURFACE_STYLE_USAGE(.BOTH.,#109);
+#109 = SURFACE_SIDE_STYLE('',(#112));
+#110 = FILL_AREA_STYLE('',(#111));
+#111 = FILL_AREA_STYLE_COLOUR('Polished_SS_Tube',#114);
+#112 = SURFACE_STYLE_FILL_AREA(#113);
+#113 = FILL_AREA_STYLE('',(#115));
+#114 = COLOUR_RGB('Polished_SS_Tube',0.78,0.81,0.85);
+#115 = FILL_AREA_STYLE_COLOUR('Sintered_316L_SS_Powder',#116);
+#116 = COLOUR_RGB('Sintered_316L_SS_Powder',0.62,0.66,0.71);
+ENDSEC;
+END-ISO-10303-21;

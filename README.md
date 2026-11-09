@@ -3,6 +3,10 @@
 
 ---
 
+<p align="center">
+  <img src="assets/cad_master_showcase.png" alt="NASA ACME 3D CAD Reverse Engineering Master Portfolio" width="100%"/>
+</p>
+
 ### Abstract
 
 This repository provides the complete computer-aided engineering (CAD) reverse-engineering dataset, parametric reconstruction models, and manufacturing drawing archives for the **NASA ACME (Advanced Combustion via Microgravity Experiments)** flight hardware, conducted aboard the International Space Station (ISS) within the Combustion Integrated Rack (CIR).
@@ -29,6 +33,10 @@ graph TD
     BNR -.->|"Preheat (3.75V) & Retraction (0.6s)"| IGN
     BNR -.->|"Far Field Temperature (125 Hz)"| TRK
 ```
+
+<p align="center">
+  <img src="assets/render_chamber_insert_iso.png" alt="NASA ACME Chamber Insert Consolidated Assembly (S1101MFA0003)" width="95%"/>
+</p>
 
 The flight system comprises eight interconnected aerospace assemblies:
 * **Porous Spherical Burner:** Sintered bronze matrix ($\varnothing 6.25\text{ mm} = 1/4"$) supplied by fine cap tubes ($OD=1.80\text{ mm}$, deviation ACME-DEV-031).
@@ -66,7 +74,26 @@ pie title Distribuição de Peças por Papel Físico & Montagem CAD
 
 ---
 
-### 3. Hybrid Modeling Methodology: AI Automation vs. Expert Manual Synthesis
+### 3. Production 3D CAD Repository & Subsystem Models
+
+All reconstructed 3D solids and kinematic subassemblies are organized within the top-level [`CAD/`](CAD/) directory in universal neutral **STEP AP214** and native **Autodesk Inventor** formats:
+
+| Subsystem Assembly | Part Number | CAD Directory | Formats Available | Primary Materials |
+| :--- | :--- | :--- | :--- | :--- |
+| **Chamber Insert (Master)** | `S1101MFA0003` | [`CAD/01_Chamber_Insert/`](CAD/01_Chamber_Insert/) | `.step`, `.stp`, `.iam` | Al 6061-T6, Inconel 625, 316L SS |
+| **EMS Structural Cage** | `S1101MFA1000` | [`CAD/02_Experiment_Mounting_Structure_EMS/`](CAD/02_Experiment_Mounting_Structure_EMS/) | `.step`, `.stp`, `.iam`, `.ipt` | Hardcoat Anodized Al 6061-T6 |
+| **Porous Spherical Burner** | `S1101MFA1220` | [`CAD/03_Burner_Assembly/`](CAD/03_Burner_Assembly/) | `.step`, `.stp`, `.ipt` | Sintered Bronze, Inconel, 316L SS |
+| **Motorized Igniter Arm** | `S1101MFA1300` | [`CAD/04_Igniter_Assembly/`](CAD/04_Igniter_Assembly/) | `.step`, `.stp`, `.iam`, `.ipt` | Kanthal A-1, 303 SS, Alumina |
+| **Thermal Far Rake Array** | `S1101MFA1606 / 1609` | [`CAD/05_Thermal_Rake_Array/`](CAD/05_Thermal_Rake_Array/) | `.stp` | Alumina Ceramic, Type-K TCs |
+| **Aerospace Fasteners** | `NAS1102 / NAS1352` | [`CAD/06_Standard_Hardware_Fasteners/`](CAD/06_Standard_Hardware_Fasteners/) | `.stp`, `.ipt` | A286 Stainless / Cadmium Plated |
+
+<p align="center">
+  <img src="assets/render_ems_structure_iso.png" alt="Experiment Mounting Structure (EMS Cage) - S1101MFA1000" width="95%"/>
+</p>
+
+---
+
+### 4. Hybrid Modeling Methodology: AI Automation vs. Expert Manual Synthesis
 
 Aerospace hardware exhibits extreme geometric diversity ranging from elementary rotational pins to asymmetric compound sleeves with tight true-position tolerances relative to compound Datums. A strict division of labor was implemented:
 
@@ -86,26 +113,26 @@ Aerospace hardware exhibits extreme geometric diversity ranging from elementary 
 └───────────────────────────────────┴────────────────────────────────────┘
 ```
 
-#### 3.1 Algorithmic Automation (Python + Autodesk Inventor API):
+#### 4.1 Algorithmic Automation (Python + Autodesk Inventor API):
 * Parameterized routines (`scripts/inventor_cad_automation.py`) generate rotational baseline envelopes, concentric bores, and standard chamfers.
 * Automatic assignment of physical aerospace materials: Inconel 625, 316L Stainless Steel, Copper-Beryllium, and Alumina ($Al_2O_3$).
 * Automated multi-format export to STEP AP214 (`.stp`) and Autodesk Inventor (`.ipt`).
 
-#### 3.2 Expert Manual Modeling & GD&T Resolution (Emerson B. J.):
+#### 4.2 Expert Manual Modeling & GD&T Resolution (Emerson B. J.):
 * **S1101MFD1237 (BRE Flow Screen Sleeve):** High-complexity boundary sleeve with asymmetric shoulder geometry ($1.962"$ outer diameter, $0.016"$ wall thickness), dual alignment slots, and integrated tab features.
 * **S1101MFD1238 (BRE 50 mm Flow Screen):** High-mesh planar diffusion screen featuring a precision central bore ($\varnothing 0.320"$) and secondary probe passage ($\varnothing 0.161"$) maintained at true position tolerances.
 * **S1101MFD1202 (Burner Insulator Pair):** Dual ultra-thin fluorocarbon/ceramic insulating sheets ($0.010"$ each, $0.020" = 0.508\text{ mm}$ total) with precision oblong O-ring clearance slots.
 * **S1101MFA1300 Kinematic Linkage:** Alignment of the articulated 4-bar mechanism ensuring exact deployed ($+39.11^\circ$) and retracted ($-26.38^\circ$) stroke angles without mechanical binding.
 
 <p align="center">
-  <img src="assets/clean_assembly_view.png" alt="Igniter Subassembly CAD View" width="85%"/>
+  <img src="assets/render_igniter_assembly_iso.png" alt="Articulated Igniter Actuator and Arm Assembly (S1101MFA1300)" width="95%"/>
 </p>
 
 ---
 
-### 4. Kinematic & Assembly Verification
+### 5. Kinematic & Subsystem Verification
 
-#### 4.1 Igniter Actuator Kinematics:
+#### 5.1 Igniter Actuator Kinematics:
 The igniter mechanism (`S1101MFA1300`) delivers the Kanthal filament from standby position to the porous sphere surface:
 * **Deployed Angle:** $+39.11^\circ$ (Apex clearance $= 1.25\text{ mm}$ above porous sphere).
 * **Retracted Angle:** $-26.38^\circ$ (Stowage standby).
@@ -116,38 +143,59 @@ The igniter mechanism (`S1101MFA1300`) delivers the Kanthal filament from standb
   <img src="assets/comp_clean_iso.png" alt="Igniter Kinematic Verification" width="85%"/>
 </p>
 
-#### 4.2 Burner Base & Sealing Stack:
-The base assembly (`S1101MFA1200`) isolates the conductive burner stem from the EMS cold plate:
+#### 5.2 Burner Base, Coflow Collar & Sealing Stack:
+The base assembly (`S1101MFA1200` / `S1101MFA1220`) isolates the conductive burner stem from the EMS cold plate:
 * Dual fluorocarbon Viton O-rings (`AS3209-013`) rated to $3.0\text{ atm}$.
 * Four modified socket head cap screws (`S1101MFP1025`, $.190\text{-}32\text{ UNRF-3A} \times .750"$).
 * Stepped ceramic bushings (`S1101MFD1204` and `1205`) preventing parasitic conductive bridging.
+* Aerodynamic coflow collar (`S1101MFD1268`) providing uniform boundary velocity profiles.
+
+<p align="center">
+  <img src="assets/render_burner_collar_iso.png" alt="Coflow Diffusion Burner Collar (S1101MFD1268)" width="95%"/>
+</p>
+
+#### 5.3 Far-Field Boundary Thermocouple Rakes:
+The Far Array rake assembly (`S1101MFA1606` / `S1101MFA1609`) positions micro-thermocouple probes at discrete radial stations ($45, 60, 100, 100\text{ mm}$) to acquire 125 Hz temperature signatures:
+
+<p align="center">
+  <img src="assets/render_thermal_rake_iso.png" alt="Thermocouple Far Rake Sensor Array (S1101MFA1606)" width="95%"/>
+</p>
 
 ---
 
-### 5. Repository Structure
+### 6. Repository Architecture
 
 ```
-nasa-acme-cad-engineering/
-├── PSI-Documents/
-│   ├── Engineering Documents/
-│   │   ├── CADs_Nosso/
-│   │   │   ├── Burner/                  # S1101MFA1200 Base & S1101MFA1220 Assemblies
-│   │   │   ├── Igniter/                 # S1101MFA1300 Actuator, Arm & Tip Models
-│   │   │   ├── Expt_Mounting_Structure/ # EMS Plates, Struts, and Fasteners
-│   │   │   ├── Montagem_Final/          # Chamber Insert Consolidated Assemblies
-│   │   │   └── Serie_1100_a_1109/       # Individual MFD Component STEP Files
-│   │   └── Desenhos_Tecnicos_NASA/      # 342 Technical Blueprints (PDF)
-│   ├── Metadata/                        # Experimental metadata and test matrices
-│   └── Reports/                         # Official NASA CAD & Engineering Reports
+nasa-acme-cad-cfd/
+├── CAD/                                 # Consolidated 3D CAD Production Repository
+│   ├── 01_Chamber_Insert/               # Master CIR Flight Insert Models (.step, .iam)
+│   ├── 02_Experiment_Mounting_Structure_EMS/ # EMS Framework, Plates, and Brackets
+│   ├── 03_Burner_Assembly/              # 1/4" & 3/8" Porous Spherical Burners & Base
+│   ├── 04_Igniter_Assembly/             # Motorized Igniter Arm, Tip, & Bracket
+│   ├── 05_Thermal_Rake_Array/           # Thermocouple Far Rake Sensor Arrays
+│   ├── 06_Standard_Hardware_Fasteners/  # NAS / MS Aerospace Standard Hardware
+│   └── README.md                        # Quick CAD format & usage guide
 ├── assets/
+│   ├── cad_master_showcase.png          # High-Resolution Master Portfolio Banner
+│   ├── render_chamber_insert_iso.png    # Chamber Insert Master Isometric Render
+│   ├── render_ems_structure_iso.png     # EMS Structural Cage Render
+│   ├── render_igniter_assembly_iso.png  # Motorized Igniter Assembly Render
+│   ├── render_burner_collar_iso.png     # Coflow Burner Collar Render
+│   ├── render_thermal_rake_iso.png      # Thermocouple Rake Array Render
 │   ├── distribuicao_pecas_cad.png       # 300 DPI High-Resolution Component Chart
-│   ├── clean_assembly_view.png          # High-fidelity Igniter 3D assembly render
 │   ├── comp_clean_iso.png               # Isometric kinematic check render
 │   ├── comp_clean_front.png             # Front elevation view
 │   ├── comp_clean_side.png              # Side elevation view
 │   └── comp_clean_top.png               # Top plan view
+├── PSI-Documents/
+│   ├── Engineering Documents/
+│   │   ├── CADs_Nosso/                  # Historical engineering working models
+│   │   └── Desenhos_Tecnicos_NASA/      # 342 Technical Blueprints (PDF)
+│   ├── Metadata/                        # Experimental metadata and test matrices
+│   └── Reports/                         # Official NASA CAD & Engineering Reports
 ├── scripts/
 │   ├── inventor_cad_automation.py       # Python COM Autodesk Inventor parametric routines
+│   ├── render_aerospace_cads.py         # Aerospace studio 3D rendering pipeline
 │   ├── verify_kinematics.py             # Igniter linkage stroke and clearance audit
 │   └── generate_pecas_catalog.py        # Generates Excel, CSV, and HTML checklists
 ├── pecas_faltantes.html                 # Interactive NASA component dashboard with 1-click links
@@ -161,7 +209,7 @@ nasa-acme-cad-engineering/
 
 ---
 
-### 6. Regulatory & Open Science Compliance Notice
+### 7. Regulatory & Open Science Compliance Notice
 
 * All primary manufacturing drawings and technical flight documents originate from the **NASA Physical Sciences Informatics (PSI)** data repository under NASA's Open Science Data Policy.
 * The contents are classified as **unclassified, public domain information with unlimited distribution rights**.
@@ -169,9 +217,8 @@ nasa-acme-cad-engineering/
 
 ---
 
-### 7. Project Credits & Technical Leadership
+### 8. Project Credits & Technical Leadership
 
-* **Lead Mechanical Design & Simulation Engineer:** Emerson B. J. (EmersonBJ)  
+* **Lead Mechanical Design & Simulation Engineer:** Emerson B. J. ([@EmersonBJ](https://github.com/EmersonBJ))  
   * Responsible for precision manual 3D modeling and reverse-engineering of high-complexity flight hardware components, GD&T resolution, kinematic clearance validation, and multidisciplinary system integration.
 * **Procedural Automation:** Python COM routines for automated parametric synthesis of axisymmetric baseline components and batch data pipeline orchestration.
-

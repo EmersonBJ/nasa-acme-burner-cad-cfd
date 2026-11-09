@@ -87,3 +87,75 @@ O atuador rotativo do ignitor opera em um mecanismo articulado de 4 barras:
 4. **`pecas_faltantes.html`:** Dashboard interativo com busca em tempo real e links diretos para PDFs e STEPs.
 5. **`pecas_faltantes.xlsx`:** Matriz Excel com 202 hiperlinks ativos e formatação condicional de status.
 6. **`assets/distribuicao_pecas_cad.png`:** Infográfico em alta resolução (300 DPI) com o inventário completo.
+
+
+---
+
+## [2026-11-09] Decisao de Arquitetura de Simulacao Multifisica: Substituicao de Suportes de Termometria Distante por Sondas Virtuais Pontuais (X, Y, Z no Ansys Fluent)
+
+### 1. Racional da Fisica e Dinamica dos Fluidos em Microgravidade
+Durante a estruturacao do dominio tridimensional do Gemeo Digital e da malha volumetrica no Ansys Fluent, foi estabelecida a substituicao das geometrias mecanicas complexas de sustentacao dos termopares distantes por **Sondas Virtuais Pontuais (Point Probes)** nas coordenadas espaciais exatas $(X, Y, Z)$ dos sensores.
+
+1. **Escala Espacial e Regime Hidrodinamico**:
+   * O raio visivel da chama esferica em microgravidade ($\mu\text{g} \approx 10^{-6}\,\text{g}$) e de $r_{\text{flame}} \approx 10\,\text{a}\,15\,\text{mm}$, centrada na origem $(0, 0, 0)$ da esfera porosa.
+   * Os sensores termicos do pente Far Rake operam a raios $r \in [45, 60, 100]\,\text{mm}$, e os termopares de campo distante operam a $r = 200\,\text{mm}$.
+   * Em microgravidade pura, na ausencia de empuxo termico natural ($\text{Gr} \to 0$), a conveccao a distancias $r > 30\,\text{mm}$ e desprezivel ($u \approx 0\,\text{m/s}$, numero de Peclet $\text{Pe} \ll 1$). O transporte de calor nessa regiao externa e governado puramente por conducao molecular e radiacao termica no gas confinador da camara CIR ($83\,\text{L}$).
+
+2. **Evitacao de Singularidades de Malha e Economia Computacional**:
+   * A inclusao dos corpos fisicos dos bracos mecanicos articulados (`S1101MFA1612`, `S1101MFD1614`), suportes de montagem (`S1101MFD1615`, `S1101MFA1624/1628/1640`), tubos ceramicos de alumina ($\varnothing 1{,}5\,\text{mm}$) e fios de termopar ($\varnothing 0{,}20\,\text{mm}$) introduziria arestas vivas, folgas submilimetricas e elevado *skewness* a centenas de milimetros da chama.
+   * A discretizacao solida desses elementos forcaria o refinamento de prismas de camada limite em uma regiao com velocidade nula, inflando a contagem de celulas da malha em $2{,}5 \times 10^6$ a $4{,}0 \times 10^6$ elementos sem nenhum ganho na precisao da combustao.
+   * A adocao de sondas pontuais virtuais desacopla a malha de fluidos dos suportes inertes, garantindo convergencia estavel do solver e acelerando o tempo de iteracao do Ansys Fluent.
+
+---
+
+### 2. Mapeamento das Sondas Virtuais Pontuais no Ansys Fluent
+Em substituicao aos solidos CAD, foram mapeadas as 6 sondas virtuais pontuais com monitoramento termico continuo ($125\,\text{Hz}$):
+
+| ID Sonda | Sensor de Voo | Subconjunto NASA | Raio Radial ($r$) | Tipo de Termopar | Papel no Gemeo Digital & Validacao |
+|---|---|---|---|---|---|
+| **P1** | **TCA** | `* S1101MFA1609` (Pos 1) | $45{,}0\,\text{mm}$ | Tipo B ($\varnothing 0{,}20\,\text{mm}$, gota $\ge 0{,}40\,\text{mm}$) | Ressuscitado analiticamente em $31{,}1^\circ\text{C}$ (ACME-DEV-026) |
+| **P2** | **TCB** | `* S1101MFA1609` (Pos 2) | $60{,}0\,\text{mm}$ | Tipo B ($\varnothing 0{,}20\,\text{mm}$, gota $\ge 0{,}40\,\text{mm}$) | Ressuscitado analiticamente em $24{,}0^\circ\text{C}$ (ACME-DEV-026) |
+| **P3** | **TCC** | `* S1101MFA1609` (Pos 3) | $100{,}0\,\text{mm}$ | Tipo B ($\varnothing 0{,}20\,\text{mm}$, gota $\ge 0{,}40\,\text{mm}$) | Temperatura do gas de campo intermediario |
+| **P4** | **TCD** | `* S1101MFA1609` (Pos 4) | $100{,}0\,\text{mm}$ | Tipo K ($\varnothing 0{,}25\,\text{mm}$, gota $\ge 0{,}50\,\text{mm}$) | **Holdout Cego de Validacao** ($\text{RMSE} = 0{,}12\,\text{K}$) |
+| **P5** | **TC200A** | `* S1101MFA1623` | $200{,}0\,\text{mm}$ | Tipo K (Igniter Side) | Temperatura de contorno distante (lado do ignitor) |
+| **P6** | **TC200B** | `* S1101MFA1627` | $200{,}0\,\text{mm}$ | Tipo K (Relay Side) | Ponta de $5\,\text{mm}$ dobrada em $30^\circ$ (Fig. 66) |
+
+*Equacao de Acoplamento Termico da Gota (Pos-Processamento 0D)*:
+A temperatura real medida pela juncao esferica ($T_b$) e reconstruida a partir da temperatura do gas ($T_g$) obtida na sonda virtual via balanco transiente de energia:
+$$\rho_b c_{p,b} V_b \frac{dT_b}{dt} = h_b A_b (T_g - T_b) - \epsilon_b \sigma A_b \left(T_b^4 - T_{\text{wall}}^4\right)$$
+
+---
+
+### 3. Inventario de Componentes Marcados com Asterisco `*` (Dispensados de CAD)
+Total de **18 componentes/montagens** marcados oficialmente com `*` na planilha `pecas_faltantes.xlsx`:
+
+1. `* S1101MFA1609` — Thermocouple Far Array Assembly
+2. `* S1101MFA1610` — Thermocouple Far Rake Assembly
+3. `* S1101MFA1612` — TC Far Mounting Arm Assembly
+4. `* S1101MFD1619` — Far TC Sleeve, Pos 1 (45mm)
+5. `* S1101MFD1620` — Far TC Sleeve, Pos 2 (60mm)
+6. `* S1101MFD1621` — Far TC Sleeve, Pos 3 & 4 (100mm)
+7. `* S1101MFA1623` — 200mm Thermocouple Assembly (Igniter Side)
+8. `* S1101MFA1627` — 200mm Thermocouple Assembly (Relay Side)
+9. `* S1101MFD1625` — 200mm TC Ceramic Sleeve (Igniter Side)
+10. `* S1101MFD1626` — 200mm TC Ceramic Sleeve (Relay Side)
+11. `* S1101MFA1624` — 200mm TC Igniter Side Mounting Bracket
+12. `* S1101MFA1628` — 200mm TC Relay Side Mounting Bracket
+13. `* S1101MFA1640` — 200mm TC Cover Assembly
+14. `* S1101EFA1611` — TC Far Rake Harness Assembly
+15. `* S1101MFD1614` — TC Rake Arm
+16. `* S1101MFD1615` — TC Rake Arm Bracket
+17. `* S1101MFD1629` — 200mm TC Arm
+18. `* S1101MFD1630` — 200mm TC Arm Base Bracket
+
+---
+
+### 4. Demarcacao Rigorosa dos Componentes com CAD Obrigatorio (`PRECISA FAZER`)
+Para evitar qualquer simplificacao indevida na fisica de combustao, permanecem como **CAD Obrigatorio (Fila Prioritaria de Modelagem)**:
+1. **`S1101EFA1215` (Termopar Embutido `TCBurner`)**: Fica cravado a $0{,}76 - 1{,}0\,\text{mm}$ na matriz de bronze poroso. Faz parte da conducao interna do queimador e fornece a condicao de contorno de temperatura da casca ($T_s$). **NAO PODE ser virtual**.
+2. **`S1101MFD1270` e `S1101MFD1210` (Suporte de $1/4"$ e Colar)**: Causa perda condutiva de $h_q = 48{,}7\,\text{W/m}^2\text{K}$ no polo sul e assimetria dipolar (+53,4% em INTNS $\text{CH}^*$). Geometria solida indispensavel.
+3. **`S1101MFD1269` (Burner Stem Cover)**: Veda o rasgo inferior da base e evita vortices espurios de recirculacao sob a chama.
+4. **`S1101MFA1319` / `1339` e `S1101MFD1320` (Ponta do Ignitor e Isolador Ceramico)**: Penetra a zona de reacao durante o ciclo de ignicao e causa perturbacao hidrodinamica durante o atraso de retracao de $0{,}6\,\text{s}$ (ACME-DEV-050).
+5. **`S1101MFD1523` (Abertura Optica do Radiometro)**: Define os angulos de visao FOV ($120{,}4\,\text{mm}$ e $120{,}2\,\text{mm}$) no ray-tracing de radiacao.
+6. **`UML1/2/4/5` (Tampas de Janela Nao Reflexivas)**: Definem a emissividade radiativa das paredes da camara (ACME-WAI-048).
+7. **`CIR-CHAMBER-83L` (Vaso de Pressao de 83L)**: Fecha a compressao isocorica em queimas de longa duracao ($> 40\,\text{s}$).

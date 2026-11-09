@@ -1,0 +1,33 @@
+# CAD Temporary Locks and Backups
+OldVersions/
+**/OldVersions/
+*.000*.ipt
+*.000*.iam
+*.lck
+*.bak
+*.tmp
+*.log
+*.idb
+*.dlog
+
+# Large datasets, videos, and raw archive dumps
+*.zip
+*.tar.gz
+*.hobj
+*.mp4
+*.avi
+*.mkv
+Reference_Data/
+**/Reference_Data/
+
+# OS and Cache files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/

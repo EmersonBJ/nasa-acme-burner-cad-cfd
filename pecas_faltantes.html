@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA ACME — Catálogo de Engenharia Reversa 3D & Hardware de Voo</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --surface: #131b2e;
+            --surface-hover: #1c2742;
+            --border: #24324f;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.2);
+            --p1-bg: rgba(239, 68, 68, 0.2);
+            --p1-text: #f87171;
+            --p2-bg: rgba(249, 115, 22, 0.2);
+            --p2-text: #fb923c;
+            --p3-bg: rgba(234, 179, 8, 0.2);
+            --p3-text: #facc15;
+            --p4-bg: rgba(148, 163, 184, 0.15);
+            --p4-text: #cbd5e1;
+            --sim-bg: rgba(34, 197, 94, 0.2);
+            --sim-text: #4ade80;
+            --nao-bg: rgba(239, 68, 68, 0.2);
+            --nao-text: #f87171;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 24px 32px;
+        }
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+        .badge {
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #0369a1;
+            color: white;
+            font-weight: 600;
+        }
+        .summary-cards {
+            display: flex;
+            gap: 16px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 18px;
+            text-align: center;
+        }
+        .stat-val {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .stat-lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            background: var(--surface);
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .search-bar {
+            display: flex;
+            gap: 12px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-right: 4px;
+        }
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+        .btn:hover {
+            background: var(--surface-hover);
+            border-color: #3b4e77;
+        }
+        .btn.active {
+            background: var(--primary);
+            color: #0f172a;
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            background: var(--surface);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            max-height: calc(100vh - 320px);
+            position: relative;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+        th {
+            background: #090d16;
+            color: #e2e8f0;
+            font-weight: 600;
+            padding: 12px 14px;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .tag-sim {
+            background: var(--sim-bg);
+            color: var(--sim-text);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+        }
+        .tag-nao {
+            background: var(--nao-bg);
+            color: var(--nao-text);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+        }
+        .tag-prio {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .prio-p1 { background: var(--p1-bg); color: var(--p1-text); }
+        .prio-p2 { background: var(--p2-bg); color: var(--p2-text); }
+        .prio-p3 { background: var(--p3-bg); color: var(--p3-text); }
+        .prio-p4 { background: var(--p4-bg); color: var(--p4-text); }
+        .prio-ref { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+        .tag-role {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        a.link-file {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        a.link-file:hover {
+            text-decoration: underline;
+            color: #7dd3fc;
+        }
+        .text-muted { color: var(--muted); }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>NASA ACME s-Flame <span class="badge">Engenharia Reversa & Modelagem CAD 3D</span></h1>
+            <div style="color: var(--muted); font-size: 13px; margin-top: 4px;">
+                Mapeamento Completo de Peças, Desenhos Técnicos (.PDF), Modelos Paramétricos STEP e Síntese Híbrida (Automação API + Refinamento Humano)
+            </div>
+        </div>
+        <div class="summary-cards">
+            <div class="stat-card">
+                <div class="stat-val">124</div>
+                <div class="stat-lbl">Total Peças</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #4ade80;">41</div>
+                <div class="stat-lbl">Prontas (SIM)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #f87171;">83</div>
+                <div class="stat-lbl">A Modelar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #38bdf8;">33.1%</div>
+                <div class="stat-lbl">Concluído</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="controls">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Pesquisar por Part Number, Nome, Grupo, Prioridade ou Descrição..." onkeyup="filterTable()">
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Status:</span>
+            <button class="btn active" onclick="setStatusFilter('ALL', this)">Todos (124)</button>
+            <button class="btn" onclick="setStatusFilter('SIM', this)">Prontos / Concluídos (41)</button>
+            <button class="btn" onclick="setStatusFilter('NÃO', this)">Faltantes / A Modelar (83)</button>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Prioridade:</span>
+            <button class="btn active" onclick="setPriorityFilter('ALL', this)">Todas</button>
+            <button class="btn" onclick="setPriorityFilter('P1', this)">P1 — Crítica</button>
+            <button class="btn" onclick="setPriorityFilter('P2', this)">P2 — Alta</button>
+            <button class="btn" onclick="setPriorityFilter('P3', this)">P3 — Média</button>
+            <button class="btn" onclick="setPriorityFilter('P4', this)">P4 — Baixa / Referência</button>
+            <button class="btn" onclick="setPriorityFilter('Referência', this)">Referência</button>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Grupo / Subsistema</th>
+                    <th>Prioridade</th>
+                    <th>Feito?</th>
+                    <th>Part Number</th>
+                    <th>Nome Oficial (Inglês NASA)</th>
+                    <th>Tipo</th>
+                    <th>Papel Físico & Montagem</th>
+                    <th>Status no CAD</th>
+                    <th>Arquivo STEP</th>
+                    <th>Desenho Técnico (.PDF)</th>
+                    <th>Descrição Técnica & GD&T</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Chama & Quenching)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Chama & Quenching)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/S1101MFD1270_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1270 ↗</a></td>
+                    <td>1/4" Spherical Burner Support Tube</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/S1101MFD1270_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101MFD1270_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo de suporte externo com parede justa (OD=1,80mm = 28,8% D0, desvio oficial ACME-DEV-031). Governa o sumidouro condutivo de calor (hq=48,7 W/m²K), o gap reflexivo abaixo do polo sul da esfera (Fig. 46) e a assimetria norte-sul (+53,4% em INTNS CH* combinada ao dipolo +20,8% da junta sinterizada do S/N 1003).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Chama & Quenching)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Chama & Quenching)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1210</strong></td>
+                    <td>.062" OD Burner Tube Collar</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/ACME_drawings_burners/s1101mfa1216_E.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Colar de retenção e vedação para tubos de 1/16" (queimador 1/4"). Trava o tubo na flange inferior e fecha a barreira condutiva entre o tubo fino e a placa.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria Embutida TCBurner)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria Embutida TCBurner)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/EFA_Eletrica/S1101EFA1215_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101EFA1215 ↗</a></td>
+                    <td>Burner Harness Assembly (inclui termopar embutido TCBurner)</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/EFA_Eletrica/S1101EFA1215_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101EFA1215_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Contém o chicote elétrico e o termopar Tipo K (∅0,25–0,30 mm) inserido 0,76–1,0 mm no hemisfério sul da esfera porosa (is_embedded_tc). Fornece a medição da temperatura interna da matriz condutiva de bronze sinterizado para o Fluent e Gêmeo Digital.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1201</strong></td>
+                    <td>Burner Base Plate</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Serie_1100_a_1109/S1101MFD1201.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 S1101MFD1201.stp</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1201_C.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Placa base estrutural do queimador. Fixa os tubos de suporte e alimentação dos queimadores esféricos e sela a câmara de combustão contra a placa superior da estrutura EMS.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1202</strong></td>
+                    <td>Burner Insulator</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Par de lâminas isolantes finas de 0,010" cada (0,020" = 0,508 mm no total) com rasgo oblongo central para passagem dos dois O-rings de fluorocarbono AS3209-013. Isola termicamente e eletricamente a base condutiva do queimador da estrutura EMS.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1203</strong></td>
+                    <td>Burner Bottom Plate</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Placa inferior de compressão e retenção da base do queimador. Garante o esmagamento controlado dos O-rings AS3209-013 e a vedação hermética contra vazamento de combustível na base.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1204</strong></td>
+                    <td>Burner Mounting Bushing (Outer)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Bucha externa de isolamento térmico e elétrico para os parafusos de fixação da base S1101MFA1200, evitando pontes térmicas indesejadas com o piso da câmara CIR.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1205</strong></td>
+                    <td>Burner Mounting Bushing (Inner)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Bucha interna de isolamento térmico e alinhamento concêntrico dos parafusos de fixação da base do queimador.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1206</strong></td>
+                    <td>Burner Centering Bushing</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Bucha de centragem de precisão da base do queimador. Garante o posicionamento coaxial do queimador esférico em relação ao eixo óptico da câmara CIR.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1200_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1200 ↗</a></td>
+                    <td>Burner Base Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1200_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1200_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem completa da base do queimador, integrando placa base, isoladores, buchas e vedações de O-ring.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>AS3209-013</strong></td>
+                    <td>O-Ring, Fluorocarbon (.426 ID x .070 W)</td>
+                    <td><span class="text-muted">Elemento Comercial / Vedação</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Par de anéis de vedação O-ring de fluorocarbono (Viton). Garantem vedação estanque contra vazamento na base do queimador sob pressões de até 3,0 atm.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>NAS1352N06-8</strong></td>
+                    <td>Screw, Cap, Socket Head (#6-32 UNRF-3A x .500)</td>
+                    <td><span class="text-muted">Elemento Comercial / Fixador</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Parafusos de fixação da placa inferior do queimador na placa base S1101MFD1201.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>NAS1149CN632R</strong></td>
+                    <td>Flat Washer (#6 regular, corrosion resistant)</td>
+                    <td><span class="text-muted">Elemento Comercial / Fixador</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Arruelas planas de aço inoxidável sob as buchas de montagem do queimador.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Isolamento Base)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Isolamento Base)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>NAS1149C0332R</strong></td>
+                    <td>Flat Washer (#10 regular, corrosion resistant)</td>
+                    <td><span class="text-muted">Elemento Comercial / Fixador</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Arruelas de assentamento para os parafusos modificados S1101MFP1025 dos 4 cantos da base.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Chama & Quenching)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Chama & Quenching)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1216_E.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1216 ↗</a></td>
+                    <td>1/4" Spherical Burner Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1216_E.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1216_E.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem geral completa do queimador esférico de voo de 1/4" (D0=6,25mm). Define a geometria primária da chama esférica.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Chama & Quenching)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Chama & Quenching)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1217_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1217 ↗</a></td>
+                    <td>1/4" Spherical Burner Subassembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1217_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1217_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Submontagem da esfera porosa de bronze sinterizado com o tubo de alimentação.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Chama & Quenching)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Chama & Quenching)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1218_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1218 ↗</a></td>
+                    <td>Spherical Burner Tube Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Serie_1100_a_1109/S1101MFA1218_A.step" target="_blank" title="Abrir Modelo 3D STEP">📦 S1101MFA1218_A.step</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1218_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1218_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem do tubo condutor e haste do queimador esférico de 1/4".</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Chama & Quenching)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Chama & Quenching)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1219_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1219 ↗</a></td>
+                    <td>.062" OD Spherical Burner Support Tube</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1219_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1219_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo capilar de suporte interno de 1/16" para alimentação de gás no núcleo da esfera porosa.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Acabamento Base Burner)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Acabamento Base Burner)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1269_rev1.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1269 ↗</a></td>
+                    <td>Burner Stem Cover</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1269_rev1.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1269_rev1.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Cobre o rasgo da base do queimador e o chicote do termopar sobre a placa S1101MFA1200, alterando o contorno inferior radiativo/convectivo e prevenindo recirculação espúria.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P3 — Média (Fixadores Especiais)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Fixadores Especiais)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFP1025</strong></td>
+                    <td>Modified SHCS (.190-32 UNRF-3A x .750)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem da Base</span></td>
+                    <td><span class="text-muted">s1101mfa1200_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Parafuso modificado de fixação dos 4 cantos da base S1101MFA1200 com rebaixo para buchas isolantes S1101MFD1204/1205.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Cancelado (ACME-WAI-012)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Cancelado (ACME-WAI-012)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/S1101MFD1271_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1271 ↗</a></td>
+                    <td>3/8" Spherical Burner Support Tube</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Queimador 3/8" Cancelado)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/S1101MFD1271_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101MFD1271_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo de suporte externo para queimador esférico de 3/8" (D0=9,525mm). Cancelado pelo waiver ACME-WAI-012; s-Flame voou exclusivamente com queimador de 1/4" (D0=6,25mm).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Cancelado (ACME-WAI-012)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Cancelado (ACME-WAI-012)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1222</strong></td>
+                    <td>.083" OD Burner Collar</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Queimador 3/8" Cancelado)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/ACME_drawings_burners/s1101mfa1216_E.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Colar adaptador de .083" (2,11 mm). Pertence exclusivamente ao queimador esférico de 3/8" (S1101MFA1220), cancelado sob o waiver ACME-WAI-012. O queimador de voo s-Flame de 1/4" utiliza S1101MFD1270 (OD=1,80 mm, ACME-DEV-031) e o colar S1101MFD1210 (.062").</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P4 — Baixa / Cancelado (ACME-WAI-012)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Cancelado (ACME-WAI-012)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1220_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1220 ↗</a></td>
+                    <td>3/8" Spherical Burner Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Queimador 3/8" Cancelado)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Burner/Montagens/S1101MFA1220_B.step" target="_blank" title="Abrir Modelo 3D STEP">📦 S1101MFA1220_B.step</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1220_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1220_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem geral do queimador de 3/8", cancelada pelo waiver ACME-WAI-012. Mantida no CAD como referência.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P4 — Baixa / Referência (Coflow Burner)">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Referência (Coflow Burner)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1268_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1268 ↗</a></td>
+                    <td>Coflow Burner Collar</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Serie_1100_a_1109/S1101MFD1268_Coflow_Burner_Collar.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 S1101MFD1268_Coflow_Burner_Collar.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1268_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1268_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Colar do queimador Coflow. Modelado para documentação ACME de referência; não participa do escoamento s-Flame.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P4 — Baixa / Referência (Queimador 1/2")">
+                    <td><strong>1. Burner (Queimador)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Referência (Queimador 1/2")</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/S1101MFD1272_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1272 ↗</a></td>
+                    <td>1/2" Spherical Burner Support Tube</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-style: italic;">PSI-Documents/Engineering Documents/CADs_Nosso/Burner/Serie_1100_a_1109/S1101MFD1272_-.stp</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/S1101MFD1272_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101MFD1272_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo de suporte externo para queimador esférico de 1/2" (12,7 mm). Usado em testes em solo e outros experimentos ACME; não voou no s-Flame.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1300_C.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1300 ↗</a></td>
+                    <td>Igniter Actuator Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/Montagens/s1101mfa1300.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1300.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1300_C.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1300_C.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem completa do mecanismo atuador do braço do ignitor com cinemática validada (+39,11° braço, -26,38° atuador).</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA1301</strong></td>
+                    <td>Igniter Actuator Subassembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/Pecas/s1101mfa1301.step" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1301.step</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1301_D.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Corpo atuador rotativo do mecanismo de ignição.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA1303</strong></td>
+                    <td>Igniter Base Subassembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/Pecas/s1101mfa1303.step" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1303.step</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1303_C.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Base do atuador do ignitor para fixação na estrutura EMS.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA1308</strong></td>
+                    <td>Igniter Arm Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/Pecas/s1101mfa1308.step" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1308.step</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1308_C.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Braço móvel articulado que conduz a ponta de ignição até o queimador.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1305</strong></td>
+                    <td>Igniter Link Arm</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/Pecas/s1101mfd1305.step" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1305.step</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1305_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Biela de acoplamento do mecanismo articulado do atuador.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1302</strong></td>
+                    <td>Igniter Base Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/ref,/peca/s1101mfd1302_igniter_bracket.step" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1302_igniter_bracket.step</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1302_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte angular de ancoragem do atuador rotativo do ignitor à placa base EMS.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Ignição & Retração)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Ignição & Retração)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1319_C.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1319 ↗</a></td>
+                    <td>Igniter Tip Assembly (Loop)</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Igniter/Montagens/S1101MFA1319_C.step" target="_blank" title="Abrir Modelo 3D STEP">📦 S1101MFA1319_C.step</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1319_C.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1319_C.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Ponta de ignição com filamento Kanthal A-1 em alça (Loop, ∅0,25mm). Fecha a geometria da ponta do braço S1101MFA1308 para simular o aquecimento Joule no preheat (2,25→3,75V) e a perturbação hidrodinâmica durante o atraso de retração de 0,6s (ACME-DEV-050).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Ignição & Retração)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Ignição & Retração)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1339.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1339 ↗</a></td>
+                    <td>Coiled Igniter Tip Assembly (Coil)</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1339.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1339.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Ponta de ignição espiralada alternativa (Coil). Permite simular a taxa de ignição diferenciada para misturas ricas ou diluídas no Gêmeo Digital.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P1 — Crítica (Ignição & Retração)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Ignição & Retração)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/S1101MFD1320_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1320 ↗</a></td>
+                    <td>Igniter Tip Insulator</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-style: italic;">Modelado (.stp pronto)</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/S1101MFD1320_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101MFD1320_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Isolador cerâmico cilíndrico de ∅4,75mm com dois furos de ∅0,5mm espaçados a 2,0mm. Garante isolamento elétrico e térmico rígido dos pinos condutores de corrente no filamento.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Porta-Ponta Ignitor)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Porta-Ponta Ignitor)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1338_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1338 ↗</a></td>
+                    <td>Igniter Tip Holder Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1338_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1338_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem-mãe do porta-ponta do ignitor que une os contatos elétricos bipartidos (S1101MFD1333/1334), pinos isolantes e a capa protetora na ponta do braço S1101MFA1308.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Porta-Ponta Ignitor)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Porta-Ponta Ignitor)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1336_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1336 ↗</a></td>
+                    <td>Cover Tab Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1336_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1336_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Aba de cobertura e isolamento do porta-ponta do ignitor. Evita arco elétrico espúrio contra as paredes metálicas durante a ignição.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Componentes Porta-Ponta)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Componentes Porta-Ponta)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1333_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1333 ↗</a></td>
+                    <td>Igniter Tip Holder, Left Side</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1333_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1333_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Metade esquerda usinada em cobre-berílio do bloco terminal de fixação mecânica e condução elétrica para a ponta do ignitor.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Componentes Porta-Ponta)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Componentes Porta-Ponta)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1334_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1334 ↗</a></td>
+                    <td>Igniter Tip Holder, Right Side</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1334_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1334_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Metade direita usinada em cobre-berílio do bloco terminal do ignitor. Fecha o circuito de corrente elétrica de preheat (3,75V).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Componentes Porta-Ponta)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Componentes Porta-Ponta)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1335_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1335 ↗</a></td>
+                    <td>Tip Holder Alignment Pin</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1335_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1335_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Pino isolante em cerâmica para alinhamento entre as metades bipartidas do porta-ponta.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Componentes Porta-Ponta)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Componentes Porta-Ponta)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1337_RevB.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1337 ↗</a></td>
+                    <td>Tip Holder Cover Tab</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1337_RevB.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1337_RevB.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chapa de blindagem e isolamento dielétrico sobre o terminal porta-ponta.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Componentes Porta-Ponta)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Componentes Porta-Ponta)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1313_F.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1313 ↗</a></td>
+                    <td>Igniter Tip Extension Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1313_F.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1313_F.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Extensão mecânica do braço para acomodação de termopares e cabos coaxiais de ignição.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Componentes Porta-Ponta)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Componentes Porta-Ponta)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1314</strong></td>
+                    <td>Igniter Tip Extension Tube</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1314_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo condutor da extensão do braço do ignitor.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Fixadores do Ignitor)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Fixadores do Ignitor)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1321</strong></td>
+                    <td>Igniter Tip Insulator Retaining Ring</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFD_Pecas_Individuais/s1101mfd1321_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Anel de trava do isolador cerâmico S1101MFD1320.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Fixadores do Ignitor)">
+                    <td><strong>2. Igniter (Ignitor)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Fixadores do Ignitor)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1332_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1332 ↗</a></td>
+                    <td>Igniter Tip Clamp Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_igniter/MFA_Montagens/s1101mfa1332_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1332_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Abraçadeira de montagem da ponta no braço articulado.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria de Voo s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria de Voo s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1609_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1609 ↗</a></td>
+                    <td>Thermocouple Far Array Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1609_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1609_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">O ÚNICO pente de termopares instalado em voo no s-Flame. Base física fundamental para validação do Ansys Fluent e Gêmeo Digital 3D: ancora a telemetria térmica a 125 Hz, o holdout cego TCD a 100mm (RMSE=0,12K) e a ressuscitação das gotas Tipo B (TCA 45mm e TCB 60mm).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria de Voo s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria de Voo s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1610_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1610 ↗</a></td>
+                    <td>Thermocouple Far Rake Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1610_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1610_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Submontagem do braço e pente Far Rake de voo com as 4 hastes isolantes de termopar.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria de Voo s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria de Voo s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1612_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1612 ↗</a></td>
+                    <td>TC Far Mounting Arm Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1612_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1612_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Braço estrutural que posiciona o pente Far Array no volume livre da câmara s-Flame, mantendo as 4 junções térmicas (45, 60, 100, 100 mm) perfeitamente alinhadas com o centro da chama esférica.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria de Voo s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria de Voo s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1619.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1619 ↗</a></td>
+                    <td>Far TC Sleeve, Pos 1 (45mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1619.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1619.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo de proteção de alumina da gota termopar TCA a r=45mm (Tipo B). Ressuscitada analiticamente em 31,1°C no Digital Twin.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria de Voo s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria de Voo s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1620.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1620 ↗</a></td>
+                    <td>Far TC Sleeve, Pos 2 (60mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1620.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1620.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubo de proteção de alumina da gota termopar TCB a r=60mm (Tipo B). Ressuscitada analiticamente em 24,0°C no Digital Twin.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Termometria de Voo s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Termometria de Voo s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1621.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1621 ↗</a></td>
+                    <td>Far TC Sleeve, Pos 3 & 4 (100mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1621.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1621.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tubos de proteção das gotas termopares TCC (Tipo B) e TCD (Tipo K) a r=100mm. TCD é o holdout cego de verificação do Gêmeo Digital 3D com RMSE=0,12K.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Campo Distante s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Campo Distante s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1623_Rev_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1623 ↗</a></td>
+                    <td>200mm Thermocouple Assembly (Igniter Side - TC200A)</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1623_Rev_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1623_Rev_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Termopar de campo distante a 200mm da esfera, posicionado no lado do ignitor (TC200A). Fornece a temperatura limite para o Fluent.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Campo Distante s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Campo Distante s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1627_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1627 ↗</a></td>
+                    <td>200mm Thermocouple Assembly (Relay Side - TC200B)</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1627_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1627_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Termopar de campo distante a 200mm da esfera no lado do relé (TC200B), com ponta terminal de 5mm dobrada em 30° (Fig. 66).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Campo Distante s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Campo Distante s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1625</strong></td>
+                    <td>200mm TC Ceramic Sleeve (Igniter Side)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1625_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste cerâmica isolante do sensor de campo distante TC200A.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Campo Distante s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Campo Distante s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1626</strong></td>
+                    <td>200mm TC Ceramic Sleeve (Relay Side)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1626_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste cerâmica isolante do sensor TC200B com chanfro terminal para inclinação em 30°. Conduz os fios até a ponta dobrada.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Suporte TC 200mm)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Suporte TC 200mm)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1624_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1624 ↗</a></td>
+                    <td>200mm TC Igniter Side Mounting Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1624_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1624_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte de montagem do termopar TC200A no lado do ignitor.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Suporte TC 200mm)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Suporte TC 200mm)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1628_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1628 ↗</a></td>
+                    <td>200mm TC Relay Side Mounting Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1628_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1628_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte de montagem do termopar TC200B com flange angular no lado do relé.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Capa Suporte TC 200mm)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Capa Suporte TC 200mm)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1640_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1640 ↗</a></td>
+                    <td>200mm TC Cover Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1640_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1640_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Capa e proteção mecânica do sensor TC200 mm.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Chicote Far Rake)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Chicote Far Rake)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101EFA1611</strong></td>
+                    <td>TC Far Rake Harness Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">s1101mfa1605_D.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chicote elétrico com conector Micro-D de 9 pinos dos 4 termopares Far Rake de voo (TCA, TCB, TCC, TCD).</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P2 — Alta (Suporte dos Pentes)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Suporte dos Pentes)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA1613</strong></td>
+                    <td>TC Rake Mounting Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem do Rake</span></td>
+                    <td><span class="text-muted">s1101mfa1605_D.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte vertical com 2 pinos guia e parafuso cativo que posiciona e alinha o pente de termopares no insert da câmara.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P3 — Média (Documentação / Near Rake Não Voou no s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Documentação / Near Rake Não Voou no s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1605_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1605 ↗</a></td>
+                    <td>Thermocouple Near Array Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem do Rake</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1605_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1605_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Pente de termopares Near Array montado com braço e bracket. Modelado para documentação de engenharia completa, porém NÃO voou nas corridas s-Flame (ACME_engineering p. 12).</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P3 — Média (Documentação / Near Rake Não Voou no s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Documentação / Near Rake Não Voou no s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1606_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1606 ↗</a></td>
+                    <td>Thermocouple Near Rake Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem do Rake</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1606_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1606_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Braço suporte do pente de termopares Near Array.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Documentação / Near Rake Não Voou no s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Documentação / Near Rake Não Voou no s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1608_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1608 ↗</a></td>
+                    <td>TC Near Mounting Arm Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1608_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1608_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Braço de sustentação do pente Near Array.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P3 — Média (Chicote Near Rake)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Chicote Near Rake)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/S1101EFA1607_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101EFA1607 ↗</a></td>
+                    <td>TC Near Rake Harness Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem do Rake</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/S1101EFA1607_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101EFA1607_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chicote elétrico com conector Micro-D de 9 pinos do pente Near Array.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Documentação / Near Rake Não Voou no s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Documentação / Near Rake Não Voou no s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1616.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1616 ↗</a></td>
+                    <td>Near TC Sleeve, Pos 1 (15mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1616.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1616.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste de alumina para termopar de posição ultra-próxima a 15mm da chama (Near Array).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Documentação / Near Rake Não Voou no s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Documentação / Near Rake Não Voou no s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1617.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1617 ↗</a></td>
+                    <td>Near TC Sleeve, Pos 2 (25mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1617.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1617.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste de alumina para termopar a 25mm da chama.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Documentação / Near Rake Não Voou no s-Flame)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Documentação / Near Rake Não Voou no s-Flame)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1618.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1618 ↗</a></td>
+                    <td>Near TC Sleeve, Pos 3 & 4 (40mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Não Voou no s-Flame)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1618.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1618.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste de alumina para termopares a 40mm da chama.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Termometria Geral)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Termometria Geral)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1614_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1614 ↗</a></td>
+                    <td>TC Rake Arm</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1614_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1614_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Corpo usinado do braço do pente de termopares.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Termometria Geral)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Termometria Geral)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1615_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1615 ↗</a></td>
+                    <td>TC Rake Arm Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1615_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1615_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte de fixação do braço articulado do pente.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Termometria Geral)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Termometria Geral)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1629</strong></td>
+                    <td>200mm TC Arm</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1629_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste estrutural do sensor de 200mm.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Termometria Geral)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Termometria Geral)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1630_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1630 ↗</a></td>
+                    <td>200mm TC Arm Base Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1630_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1630_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Flange de fixação na estrutura da câmara para a haste do termopar de 200mm.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P4 — Baixa / Fora da Malha (Ground Stowage)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Ground Stowage)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/S1101MFA1632_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1632 ↗</a></td>
+                    <td>TC Rake Cover Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem do Rake</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/S1101MFA1632_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 S1101MFA1632_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Conjunto da capa protetora em leque e seu suporte central (removidos antes do voo).</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P4 — Baixa / Fora da Malha (Ground Stowage)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Ground Stowage)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1637.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1637 ↗</a></td>
+                    <td>TC Rake Cover Mounting Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Modelado (.stp pronto)</td>
+                    <td><span class="text-muted" style="font-size: 11px;">🔗 Integrado na Montagem do Rake</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1637.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1637.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte de fixação da capa protetora de transporte no corpo do rake.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Fora da Malha (Ground Stowage)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Ground Stowage)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1634.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1634 ↗</a></td>
+                    <td>TC Rake Cover, Right Side</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1634.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1634.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chapa direita da capa protetora de transporte/manuseio em solo do rake. Removida pelo astronauta antes do fechamento da câmara.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Fora da Malha (Ground Stowage)">
+                    <td><strong>3. Termometria (Termopares)</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Ground Stowage)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1636.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1636 ↗</a></td>
+                    <td>TC Rake Cover, Left Side</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1636.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1636.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chapa esquerda da capa protetora de transporte/manuseio em solo do rake.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Óptica / Radiometria & Penumbra FOV)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Óptica / Radiometria & Penumbra FOV)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1523</strong></td>
+                    <td>Radiometer Aperture</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1523_A.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Abertura circular sem lente de precisão que define a geometria do cone de visão (FOV) dos 5 radiômetros padrão (138,5mm) e do radiômetro offset (205,4mm). Essencial para ray-tracing Monte Carlo da penumbra óptica e validação do holdout RadiometerOffset (R²=0,8355).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Óptica / Radiometria & Penumbra FOV)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Óptica / Radiometria & Penumbra FOV)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1526_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1526 ↗</a></td>
+                    <td>Wide View Offset Radiometer Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1526_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1526_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem do radiômetro deslocado a 60° (205,4mm). Utilizado como sinal cego de holdout no Digital Twin para prever a radiação térmica distante emitida pela chama de metano.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Óptica / Radiometria & Penumbra FOV)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Óptica / Radiometria & Penumbra FOV)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1528</strong></td>
+                    <td>Offset Radiometer Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1528_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte estrutural angular a 60° que posiciona o radiômetro offset na câmara CIR.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P2 — Alta (Contorno Radiativo & Óptico)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p2">P2 — Alta (Contorno Radiativo & Óptico)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>UML1 / UML2 / UML4/8 / UML5</strong></td>
+                    <td>Internal Non-Reflective Window Covers (Window Blanks)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Contorno Externo do Vaso</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">ACME_engineering_20210328.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tampas internas pretas fosfatadas/anodizadas que cobrem janelas ópticas não utilizadas na câmara CIR para eliminar reflexões secundárias (ACME-WAI-048). Fixam a emissividade superficial (ε=0,92) para a equação de transferência radiativa (DO) no Fluent.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Radiometria Padrão)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Radiometria Padrão)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1520_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1520 ↗</a></td>
+                    <td>Radiometer Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1520_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1520_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Conjunto do sensor radiômetro de banda larga (termopilha Dexter) para medição de fluxo radiativo total em W/m².</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Radiometria Padrão)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Radiometria Padrão)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1521</strong></td>
+                    <td>Radiometer Housing Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1521_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Carcaça montada do sensor radiométrico de termopilha.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Radiometria Padrão)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Radiometria Padrão)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1522_C.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1522 ↗</a></td>
+                    <td>Radiometer Housing</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1522_C.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1522_C.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Corpo usinado da carcaça do radiômetro.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Obstrução Óptica / TFP)">
+                    <td><strong>4. Radiometria & Janelas Ópticas</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Obstrução Óptica / TFP)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1529_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1529 ↗</a></td>
+                    <td>TFP (Thin Filament Pyrometry) Assembly, Arm & Array (S1101MFA1529 a 1558)</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1529_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1529_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Braço motorizado de pirometria de filamento fino (TFP, S1101MFA1529 a 1558). Seu volume no insert gerou obstrução visual parcial da câmera de intensidade CFI (INTNS CH*). Relevante para modelar sombreamento óptico.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1500_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1500 ↗</a></td>
+                    <td>PMT Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1500_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1500_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Conjunto do sensor Fotomultiplicador (PMT) para captura ultrassensível de emissão de quimioluminescência (OH*, CH* e ND - banda larga).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1501</strong></td>
+                    <td>PMT Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1501_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte estrutural de montagem dos tubos PMT no flange óptico.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1502_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1502 ↗</a></td>
+                    <td>PMT Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1502_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1502_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chapa suporte do PMT.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1503</strong></td>
+                    <td>PMT Mounting Clamp</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1503_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Abraçadeira bipartida de retenção do tubo de vidro fotomultiplicador.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1504</strong></td>
+                    <td>PMT Fiber Optic Cable Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1504_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Cabo de fibra óptica que conduz a luz da janela de safira até o cátodo do PMT.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1505</strong></td>
+                    <td>PMT Lens Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1505_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Conjunto de lentes focais do sensor PMT.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1506_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1506 ↗</a></td>
+                    <td>PMT Filter Holder Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfa1506_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1506_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Porta-filtro óptico interferencial de 310nm (OH*) e 430nm (CH*).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1508</strong></td>
+                    <td>PMT Alignment Ring</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1508_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Anel de alinhamento axial dos filtros ópticos.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1513</strong></td>
+                    <td>PMT Shutter Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Pecas/s1101mfd1513.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1513.stp</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_diagnostic_system/ACME_drawings_diagnostic_system/s1101mfd1513_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte do obturador mecânico de proteção contra superexposição do PMT durante a ignição.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_analog_camera/ACME_drawings_analog_camera/s1101mfa1400_C.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1400 ↗</a></td>
+                    <td>CIR Internal Camera Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_analog_camera/ACME_drawings_analog_camera/s1101mfa1400_C.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1400_C.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Conjunto da câmera de vídeo interna analógica colorida que monitora o arco de ignição e o acendimento inicial da chama.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1401</strong></td>
+                    <td>Internal Camera Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_imaging_system/ACME_drawings_imaging_system/s1101mfa1401_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte de fixação da câmera interna no flange do insert.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA1405</strong></td>
+                    <td>Illumination LED Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_imaging_system/ACME_drawings_imaging_system/s1101mfa1405_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Conjunto emissor de LED verde para iluminação de referência da esfera e do ignitor antes do disparo (PRE_IGNITION_REF).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_analog_camera/ACME_drawings_analog_camera/s1101mfa1406_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1406 ↗</a></td>
+                    <td>LED Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_analog_camera/ACME_drawings_analog_camera/s1101mfa1406_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1406_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte ajustável de mira do feixe de iluminação LED.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1411</strong></td>
+                    <td>Camera Mirror Bracket</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_imaging_system/ACME_drawings_imaging_system/s1101mfd1411_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte do espelho defletor óptico a 45° da câmera interna.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Óptica & PMTs)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Óptica & PMTs)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA2316</strong></td>
+                    <td>Schott BG7 Blue Filter Barrel Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Sensor Óptico (FOV/Penumbra)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_imaging_system/ACME_drawings_imaging_system/s1101mfa2316_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Filtro de vidro óptico colorido Schott BG7 de 2mm (ACME-DEV-046) montado no barril da DataCam para suprimir radiação contínua de fuligem e realçar emissão CH*.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Filtros Ópticos DataCam)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Filtros Ópticos DataCam)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA2317</strong></td>
+                    <td>DataCam Clear Filter Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">ACME_engineering_20210328.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Filtro transparente da roda de filtros da DataCam externa (resposta de banda larga sem atenuação espectral).</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Filtros Ópticos DataCam)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Filtros Ópticos DataCam)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA2318</strong></td>
+                    <td>DataCam 430nm (CH*) Filter Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">ACME_engineering_20210328.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Filtro passa-faixa em 430 nm para isolamento da quimioluminescência CH* na câmera DataCam.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P3 — Média (Filtros Ópticos DataCam)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p3">P3 — Média (Filtros Ópticos DataCam)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA2319</strong></td>
+                    <td>DataCam 440nm Filter Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">ACME_engineering_20210328.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Filtro óptico em 440 nm para medição de fundo espectral adjacente ao radical CH*.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Fora da Malha (Bancada Óptica Externa MDCA)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Bancada Óptica Externa MDCA)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_data_camera/ACME_drawings_data_camera/s1101mfa2300_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA2300 ↗</a></td>
+                    <td>Filter Wheel Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_data_camera/ACME_drawings_data_camera/s1101mfa2300_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa2300_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Carcaça mecânica da roda motorizada de 4 filtros ópticos montada na bancada externa MDCA fora do vaso de pressão CIR. O efeito óptico é computado diretamente por transferência analítica no Gêmeo Digital sem malha de CFD.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Fora da Malha (Bancada Óptica Externa MDCA)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Bancada Óptica Externa MDCA)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFA2314</strong></td>
+                    <td>Filter Wheel Drive Subassembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_imaging_system/ACME_drawings_imaging_system/s1101mfd2314_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Trem motriz e motor de passo da roda de filtros externa.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Baixa / Fora da Malha (Bancada Óptica Externa MDCA)">
+                    <td><strong>5. Óptica, PMTs & Câmeras</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Baixa / Fora da Malha (Bancada Óptica Externa MDCA)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD2315</strong></td>
+                    <td>Filter Wheel Indexing Ring</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Fora da Malha (Stowage/Bancada Externa)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_imaging_system/ACME_drawings_imaging_system/s1101mfd2315_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Disco indexador com batentes mecânicos para posicionamento dos filtros.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>6. Manifolds & Suprimento de Gás</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFA_Montagens/s1101mfa1100_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1100 ↗</a></td>
+                    <td>Input Manifold Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFA_Montagens/s1101mfa1100_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1100_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Manifold de distribuição primária de gases combustíveis (CH4, C2H4) e oxidantes (O2/N2) do CIR para o chamber insert.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>6. Manifolds & Suprimento de Gás</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1102</strong></td>
+                    <td>Input Manifold</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply_system/ACME_drawings_gas_supply_system/s1101mfd1102_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Bloco usinado do manifold de entrada de gases.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>6. Manifolds & Suprimento de Gás</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFD_Pecas_Individuais/s1101mfd1103_C.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1103 ↗</a></td>
+                    <td>Input Manifold Cold Plate Spacer Pad</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFD_Pecas_Individuais/s1101mfd1103_C.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1103_C.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Espaçador térmico para isolamento condutivo entre o bloco manifold e a placa fria da estrutura.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>6. Manifolds & Suprimento de Gás</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFA_Montagens/s1101mfa1104_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1104 ↗</a></td>
+                    <td>Switching Manifold Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFA_Montagens/s1101mfa1104_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1104_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Manifold de chaveamento pneumático que direciona o fluxo de combustível para o queimador ativo selecionado.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>6. Manifolds & Suprimento de Gás</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>S1101MFD1106</strong></td>
+                    <td>Switching Manifold Cold Plate Spacer Pad</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply_system/ACME_drawings_gas_supply_system/s1101mfd1106_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Espaçador térmico do manifold de chaveamento.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>6. Manifolds & Suprimento de Gás</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFA_Montagens/s1101mfa1123_E.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1123 ↗</a></td>
+                    <td>Gas Supply Line Bracket Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_gas_supply/MFA_Montagens/s1101mfa1123_E.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1123_E.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Suporte e abraçadeiras de fixação das linhas de suprimento de gás rígidas de aço inoxidável.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P1 — Crítica (Contorno do Vaso 83L)">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-p1">P1 — Crítica (Contorno do Vaso 83L)</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><strong>CIR-CHAMBER-83L</strong></td>
+                    <td>CIR Combustion Chamber Pressure Vessel (83L)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Contorno Externo do Vaso</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><span class="text-muted">ACME_engineering_20210328.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Vaso de combustão cilíndrico de 83 litros do CIR. Fecha o contorno externo do fluido no Ansys Fluent, governando o aumento de pressão isocórico (dP/dt) em queimas longas (>40s) e a condição de contorno térmica de parede (T_inf).</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA0003</strong></td>
+                    <td>CIR Chamber Insert Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Domínio Fluido CFD (Parede/Injeção/Sumidouro)</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Montagem_Final/s1101mfa0003_chamber_insert.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa0003_chamber_insert.stp</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_flight_hardware/ACME_drawings_flight_hardware/s1101mfa0003_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Montagem completa do Chamber Insert ACME que se aloja dentro da câmara de combustão de 83L do CIR.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1230_C.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1230 ↗</a></td>
+                    <td>50mm BRE Burner Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Experimento BRE)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFA_Montagens/s1101mfa1230_C.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1230_C.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Queimador poroso plano de 50mm pertencente ao experimento BRE (Burning Rate Emulator). Caso estenda o Gêmeo Digital para o BRE, define a injeção plana de combustível.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1237_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1237 ↗</a></td>
+                    <td>BRE Sintered Copper Plate (5.3mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Experimento BRE)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1237_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1237_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Placa condutora de cobre sinterizado de 5,3mm de espessura que atua como estabilizador térmico do queimador BRE 50mm.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1238_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1238 ↗</a></td>
+                    <td>BRE Perforated Brass Screen (0.4mm)</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Experimento BRE)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1238_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1238_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Par de telas perfuradas de latão (0,4mm) para uniformização do perfil de velocidade do escoamento plano de gás no queimador BRE.</td>
+                </tr>
+                <tr data-feito="NÃO" data-prio="P4 — Contorno & Outros Exp.">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-p4">P4 — Contorno & Outros Exp.</span></td>
+                    <td style="text-align: center;"><span class="tag-nao">NÃO</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1239_-.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1239 ↗</a></td>
+                    <td>BRE Retaining Wire Mesh</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural (Experimento BRE)</span></td>
+                    <td>Faltante (A Modelar)</td>
+                    <td><span class="text-muted" style="font-style: italic;">A Modelar / Faltante</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/MFD_Pecas_Individuais/Serie_1100_a_1109/s1101mfd1239_-.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1239_-.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Rede de malha fina de retenção superficial da matriz de queima plana do experimento BRE.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>7. Vaso CIR & Experimento BRE</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_e-field_system/MFA_Montagens/s1101mfa1700_D.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1700 ↗</a></td>
+                    <td>EMS Alignment Fixture Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Montagens/s1101mfa1000/s1101mfa1700.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1700.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_e-field_system/MFA_Montagens/s1101mfa1700_D.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1700_D.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Dispositivo mecânico de alinhamento e ancoragem do insert dentro do CIR.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFA_Montagens/s1101mfa1000_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1000 ↗</a></td>
+                    <td>Experiment Mounting Structure (EMS) Assembly</td>
+                    <td><span class="text-muted">Montagem Geral (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Montagens/s1101mfa1000.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1000.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFA_Montagens/s1101mfa1000_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1000_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Estrutura de suporte principal (EMS) que acomoda todos os subsistemas dentro do insert da câmara CIR.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA1001</strong></td>
+                    <td>EMS Top Plate Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Montagens/s1101mfa1001.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1001.stp</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_flight_hardware/ACME_drawings_flight_hardware/s1101mfa1001_D.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Placa superior estrutural com aberturas ópticas e flanges de interface.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFA_Montagens/s1101mfa1003_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFA1003 ↗</a></td>
+                    <td>EMS Bottom Plate Assembly</td>
+                    <td><span class="text-muted">Submontagem (.IAM)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Montagens/s1101mfa1003.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1003.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFA_Montagens/s1101mfa1003_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfa1003_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Placa inferior estrutural onde são montadas as bases do queimador e do ignitor.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFD_Pecas_Individuais/s1101mfd1004_B.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1004 ↗</a></td>
+                    <td>EMS Bottom Plate</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Pecas/s1101mfd1004.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1004.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFD_Pecas_Individuais/s1101mfd1004_B.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1004_B.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Chapa inferior usinada em alumínio 6061-T6 da estrutura EMS.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFD_Pecas_Individuais/s1101mfd1008_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1008 ↗</a></td>
+                    <td>EMS Structural Strut Post</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Pecas/s1101mfd1008.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1008.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFD_Pecas_Individuais/s1101mfd1008_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1008_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Coluna estrutural tubular de canto.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFD_Pecas_Individuais/s1101mfd1014_A.pdf" target="_blank" title="Abrir Desenho Técnico">S1101MFD1014 ↗</a></td>
+                    <td>EMS Diagonal Stiffener</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Pecas/s1101mfd1014.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1014.stp</a></td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_expt_mounting_structure/MFD_Pecas_Individuais/s1101mfd1014_A.pdf" target="_blank" title="Abrir Desenho Técnico">📄 s1101mfd1014_A.pdf</a></td>
+                    <td style="min-width: 280px; max-width: 450px;">Tirante diagonal de contraventamento.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFD1018</strong></td>
+                    <td>EMS Extraction Handle</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Pecas/s1101mfd1018.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfd1018.stp</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_flight_hardware/ACME_drawings_flight_hardware/s1101mfd1018_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Alça de extração rápida do insert do CIR pelos astronautas.</td>
+                </tr>
+                <tr data-feito="SIM" data-prio="Referência / Concluído">
+                    <td><strong>8. Estrutura EMS</strong></td>
+                    <td><span class="tag-prio prio-ref">Referência / Concluído</span></td>
+                    <td style="text-align: center;"><span class="tag-sim">SIM</span></td>
+                    <td><strong>S1101MFA1016</strong></td>
+                    <td>EMS Strut Assembly</td>
+                    <td><span class="text-muted">Peça Individual (.IPT/.STEP)</span></td>
+                    <td><span class="tag-role">Referência Estrutural</span></td>
+                    <td>Concluído / Existente</td>
+                    <td><a class="link-file" href="file:///D:/NASA_CAD_Reverse_Engineering/PSI-Documents/Engineering Documents/CADs_Nosso/Expt_Mounting_Structure/Pecas/s1101mfa1016.stp" target="_blank" title="Abrir Modelo 3D STEP">📦 s1101mfa1016.stp</a></td>
+                    <td><span class="text-muted">PSI-Documents/Engineering Documents/Desenhos_Tecnicos_NASA/ACME_drawings_flight_hardware/ACME_drawings_flight_hardware/s1101mfa1016_-.pdf</span></td>
+                    <td style="min-width: 280px; max-width: 450px;">Haste estrutural de contraventamento e rigidez mecânica da gaiola EMS.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let currentStatusFilter = 'ALL';
+        let currentPriorityFilter = 'ALL';
+
+        function setStatusFilter(val, btn) {
+            currentStatusFilter = val;
+            btn.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterTable();
+        }
+
+        function setPriorityFilter(val, btn) {
+            currentPriorityFilter = val;
+            btn.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterTable();
+        }
+
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#dataTable tbody tr');
+
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                const feito = r.getAttribute('data-feito');
+                const prio = r.getAttribute('data-prio');
+
+                let matchSearch = text.includes(query);
+                let matchStatus = (currentStatusFilter === 'ALL') || (feito === currentStatusFilter);
+                let matchPriority = (currentPriorityFilter === 'ALL') || prio.includes(currentPriorityFilter);
+
+                if (matchSearch && matchStatus && matchPriority) {
+                    r.style.display = '';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

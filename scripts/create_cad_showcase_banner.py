@@ -60,3 +60,4 @@ banner.paste(q4, (x2, y2))
 out_path = os.path.join(assets, "cad_master_showcase.png")
 banner.save(out_path, quality=95)
 print("Saved master showcase banner:", out_path)
+

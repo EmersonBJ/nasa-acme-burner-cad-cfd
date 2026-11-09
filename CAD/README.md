@@ -53,3 +53,4 @@ CAD/
 ## Technical Leadership & CAD Authorship
 
 * **Lead Mechanical Design & Simulation Engineer:** Emerson B. J. ([@EmersonBJ](https://github.com/EmersonBJ))
+

@@ -84,3 +84,4 @@ if os.path.exists(rake_dir):
                 copy_file(os.path.join(root, f), dirs["05_Thermal_Rake_Array"])
 
 print("CAD mirror completed successfully!")
+

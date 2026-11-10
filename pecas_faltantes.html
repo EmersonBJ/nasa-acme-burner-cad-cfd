@@ -198,7 +198,7 @@
                     <td>Domínio Fluido / Contorno Térmico CFD</td>
                     <td><span style="color: var(--text-muted); font-size: 11px;">A Modelar / Faltante</span></td>
                     <td><a class="link-gh" href="https://github.com/EmersonBJ/nasa-acme-burner-cad-cfd/blob/main/PSI-Documents/Engineering%20Documents/Desenhos_Tecnicos_NASA/ACME_drawings_burners/EFA_Eletrica/S1101EFA1215_B.pdf" target="_blank" title="Abrir Desenho Técnico no GitHub">📄 S1101EFA1215_B.pdf</a></td>
-                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[PRECISA FAZER NO CAD]: Geometria crítica com contato físico direto, injeção de combustível, sumidouro térmico ou mecanismo ativo. Contém o chicote elétrico e o termopar Tipo K (∅0,25–0,30 mm) inserido 0,76–1,0 mm no hemisfério sul da esfera porosa (is_embedded_tc). Fornece a medição da temperatura interna da matriz condutiva de bronze sinterizado para o Fluent e Gêmeo Digital.</td>
+                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[PRECISA FAZER NO CAD]: Geometria crítica com contato físico direto, injeção de combustível, sumidouro térmico ou mecanismo ativo. Contém o chicote elétrico e o termopar Tipo K (∅0,25–0,30 mm) inserido 0,76–1,0 mm no hemisfério sul da esfera porosa (is_embedded_tc). Fornece a medição da temperatura interna da matriz condutiva de bronze sinterizado para o Fluent e PINN.</td>
                 </tr>
                 <tr data-dec="FEITO">
                     <td><strong>1. Burner (Queimador)</strong></td>
@@ -744,7 +744,7 @@
                     <td>* Sonda Virtual Pontual X,Y,Z (Fluent Monitor)</td>
                     <td><a class="link-gh" href="https://github.com/EmersonBJ/nasa-acme-burner-cad-cfd/blob/main/CAD/05_Thermal_Rake_Array/s1101mfa1609_1609_OPER.stp" target="_blank" title="Visualizar 3D interativo no GitHub">📦 s1101mfa1609_1609_OPER.stp</a></td>
                     <td><a class="link-gh" href="https://github.com/EmersonBJ/nasa-acme-burner-cad-cfd/blob/main/PSI-Documents/Engineering%20Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfa1609_D.pdf" target="_blank" title="Abrir Desenho Técnico no GitHub">📄 s1101mfa1609_D.pdf</a></td>
-                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[* NÃO PRECISA DE CAD - SONDA VIRTUAL ANSYS]: Monitoramento térmico pontual direto nas coordenadas exatas (X, Y, Z) no Fluent. Elimina suportes mecânicos, singularidades de malha e milhões de células desnecessárias. O ÚNICO pente de termopares instalado em voo no s-Flame. Base física fundamental para validação do Ansys Fluent e Gêmeo Digital 3D: ancora a telemetria térmica a 125 Hz, o holdout cego TCD a 100mm (RMSE=0,12K) e a ressuscitação das gotas Tipo B (TCA 45mm e TCB 60mm).</td>
+                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[* NÃO PRECISA DE CAD - SONDA VIRTUAL ANSYS]: Monitoramento térmico pontual direto nas coordenadas exatas (X, Y, Z) no Fluent. Elimina suportes mecânicos, singularidades de malha e milhões de células desnecessárias. O ÚNICO pente de termopares instalado em voo no s-Flame. Base física fundamental para validação do Ansys Fluent e 4D PINN: ancora a telemetria térmica a 125 Hz, o holdout cego TCD a 100mm (RMSE=0,12K) e a ressuscitação das gotas Tipo B (TCA 45mm e TCB 60mm).</td>
                 </tr>
                 <tr data-dec="SONDA">
                     <td><strong>3. Termometria (Termopares)</strong></td>
@@ -809,7 +809,7 @@
                     <td>* Sonda Virtual Pontual X,Y,Z (Fluent Monitor)</td>
                     <td><span style="color: var(--text-muted); font-size: 11px;">--- (Dispensado / Sonda Virtual)</span></td>
                     <td><a class="link-gh" href="https://github.com/EmersonBJ/nasa-acme-burner-cad-cfd/blob/main/PSI-Documents/Engineering%20Documents/Desenhos_Tecnicos_NASA/ACME_drawings_measurement_system/ACME_drawings_measurement_system/s1101mfd1621.pdf" target="_blank" title="Abrir Desenho Técnico no GitHub">📄 s1101mfd1621.pdf</a></td>
-                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[* NÃO PRECISA DE CAD - SONDA VIRTUAL ANSYS]: Monitoramento térmico pontual direto nas coordenadas exatas (X, Y, Z) no Fluent. Elimina suportes mecânicos, singularidades de malha e milhões de células desnecessárias. Tubos de proteção das gotas termopares TCC (Tipo B) e TCD (Tipo K) a r=100mm. TCD é o holdout cego de verificação do Gêmeo Digital 3D com RMSE=0,12K.</td>
+                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[* NÃO PRECISA DE CAD - SONDA VIRTUAL ANSYS]: Monitoramento térmico pontual direto nas coordenadas exatas (X, Y, Z) no Fluent. Elimina suportes mecânicos, singularidades de malha e milhões de células desnecessárias. Tubos de proteção das gotas termopares TCC (Tipo B) e TCD (Tipo K) a r=100mm. TCD é o holdout cego de verificação do 4D PINN com RMSE=0,12K.</td>
                 </tr>
                 <tr data-dec="SONDA">
                     <td><strong>3. Termometria (Termopares)</strong></td>
@@ -1472,7 +1472,7 @@
                     <td>Fora da Malha (Atrás da Janela Óptica)</td>
                     <td><span style="color: var(--text-muted); font-size: 11px;">--- (Dispensado / Externo)</span></td>
                     <td><a class="link-gh" href="https://github.com/EmersonBJ/nasa-acme-burner-cad-cfd/blob/main/PSI-Documents/Engineering%20Documents/Desenhos_Tecnicos_NASA/ACME_drawings_data_camera/ACME_drawings_data_camera/s1101mfa2300_D.pdf" target="_blank" title="Abrir Desenho Técnico no GitHub">📄 s1101mfa2300_D.pdf</a></td>
-                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[NÃO PRECISA DE CAD]: Carcaça estrutural externa alojada atrás de janelas ópticas. Carcaça mecânica da roda motorizada de 4 filtros ópticos montada na bancada externa MDCA fora do vaso de pressão CIR. O efeito óptico é computado diretamente por transferência analítica no Gêmeo Digital sem malha de CFD.</td>
+                    <td style="min-width: 280px; max-width: 480px; font-size: 11px;">[NÃO PRECISA DE CAD]: Carcaça estrutural externa alojada atrás de janelas ópticas. Carcaça mecânica da roda motorizada de 4 filtros ópticos montada na bancada externa MDCA fora do vaso de pressão CIR. O efeito óptico é computado diretamente por transferência analítica no PINN sem malha de CFD.</td>
                 </tr>
                 <tr data-dec="DISP">
                     <td><strong>5. Óptica, PMTs & Câmeras</strong></td>

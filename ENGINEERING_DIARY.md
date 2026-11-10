@@ -159,3 +159,48 @@ Para evitar qualquer simplificacao indevida na fisica de combustao, permanecem c
 5. **`S1101MFD1523` (Abertura Optica do Radiometro)**: Define os angulos de visao FOV ($120{,}4\,\text{mm}$ e $120{,}2\,\text{mm}$) no ray-tracing de radiacao.
 6. **`UML1/2/4/5` (Tampas de Janela Nao Reflexivas)**: Definem a emissividade radiativa das paredes da camara (ACME-WAI-048).
 7. **`CIR-CHAMBER-83L` (Vaso de Pressao de 83L)**: Fecha a compressao isocorica em queimas de longa duracao ($> 40\,\text{s}$).
+
+
+---
+
+## 5. Atualizacao de Modelos CAD Inspecionados e Aprovados (10/11/2026)
+
+Inspecao tecnica rigorosa dos arquivos STEP exportados/baixados na raiz de Downloads, validando integridade topologica (manifold solid brep / closed shell), dimensional e aderencia aos desenhos oficiais da NASA GRC / ZIN Technologies:
+
+### 1. Modelos Aprovados e Armazenados nos Repositorios Oficiais
+1. **`S1101MFA1216_E.step` (Queimador Esferico de Voo de 1/4" - 6,35 mm)**:
+   - **Localizacao Oficial:** `CADs_Nosso/Burner/Montagens/S1101MFA1216_E.step`
+   - **Validacao Dimensional:** Raio da esfera porosa R = 3.175 mm (Diametro 6.35 mm = 1/4"). Centro da esfera fixado com precisao em Z = 177.80 mm (7.0"), perfeitamente alinhado com o eixo optico da camara CIR. Topo da esfera em Z = 180.97 mm.
+   - **Componentes Integrados:** Placa base `S1101MFD1201`, haste de suporte `S1101MFD1270` (OD = 1.83 mm), colar de retencao `S1101MFD1210` e sonda de termopar `92420308-705` a 55 graus.
+   - **Status na Planilha:** Atualizado de `PRECISA FAZER` para **`JÁ MODELADO`**.
+
+2. **`s1101efa1215_FULL.stp` (Burner Harness Assembly - Chicote Eletrico)**:
+   - **Localizacao Oficial:** `CADs_Nosso/Burner/Serie_1100_a_1109/s1101efa1215_FULL.stp`
+   - **Validacao Dimensional:** Comprimento total X = 244.47 mm (aderente a 9.5 +/- 0.5" do desenho NASA `S1101EFA1215`). Inclui o plugue Glenair circular e conectores olhais de aterramento.
+   - **Status na Planilha:** Atualizado para **`JÁ MODELADO`**.
+
+3. **`s1101mfa1339_ponteira_ignitor.stp` (Igniter Tip Assembly - Coiled)**:
+   - **Localizacao Oficial:** `CADs_Nosso/Igniter/Pecas/s1101mfa1339_ponteira_ignitor.stp`
+   - **Validacao:** Ponta do atuador de ignicao com filamento de aquecimento em espiral (Coil), correspondente a montagem `S1101MFA1339`.
+   - **Status na Planilha:** Atualizado para **`JÁ MODELADO`**.
+
+4. **`S1101MFD1320.stp` (Igniter Tip Insulator)**:
+   - **Localizacao Oficial:** `CADs_Nosso/Igniter/Pecas/S1101MFD1320.stp`
+   - **Validacao:** Isolador ceramico cilindrico usinado em alumina (4.75 x 13.46 mm).
+
+5. **`S1101MFA1606.stp` (Near Rake Thermocouple Assembly)**:
+   - **Localizacao Oficial:** `CADs_Nosso/Thermocouples/Montagens/S1101MFA1606.stp`
+   - **Validacao:** Suporte arqueado de termopares proximos (188.13 x 136.08 x 7.53 mm) reconstruido 1:1 com base no desenho `S1101MFA1606`.
+
+6. **`s1101mfa1609_1609_OPER.stp` (Far Rake Array Assembly)**:
+   - **Localizacao Oficial:** `CADs_Nosso/Thermocouples/Montagens/s1101mfa1609_1609_OPER.stp`
+   - **Nota de Engenharia:** Embora no Ansys Fluent os termopares distantes sejam tratados como sondas virtuais pontuais (X,Y,Z), o modelo CAD foi aprovado e arquivado para rastreabilidade de interferencia estrutural.
+
+7. **Conjunto Optico de Janelas e Tampas Nao-Reflexivas da Camara CIR (Waiver ACME-WAI-048)**:
+   - **Localizacao Oficial:** `CADs_Nosso/CIR_Chamber/`
+   - **Arquivos:** `cir_anel_8_janelas_e_tampas_ansys.stp`, `cir_window_cover_SFLAME.stp`, `cir_window_cover_FIG56.stp`, `cir_window_cover_FIG57.stp`, `cir_window_cover_SINGLE.stp`, `uml_window_cover_individual.stp`.
+   - **Finalidade:** Definicao exata dos contornos de radiacao no modelo DO (Discrete Ordinates) do Ansys Fluent com absortividade alpha = 0.92 nas posicoes UML1, UML2 e UML5.
+
+### 2. Arquivos Mantidos na Pasta Downloads (Pendentes / Duplicatas)
+- **`S1101MFA1216_E (1).step`**: Versao intermediaria onde o topo da esfera ficou em Z = 182.56 mm (heranca da cota de 3/8"). Mantido em Downloads sem migracao para evitar sobrescrever a versao final correta (`S1101MFA1216_E.step` com Z_max = 180.97 mm).
+- **`S1101EFA1215_B.step`**: Contem apenas o solido da plaqueta de identificacao (label de 4.5 x 6.8 mm), sendo substituido com sucesso pelo arquivo completo `s1101efa1215_FULL.stp`.
